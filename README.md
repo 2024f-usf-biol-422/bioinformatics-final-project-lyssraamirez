@@ -7,6 +7,7 @@ Parts of this pipeline approach are based on the pipeline described in the [Data
 Research question: How do SARS-CoV-2 variants detected in wastewater reflect regional trends in COVID-19 case counts, and what insights do these data provide about community-level viral transmission?
 
 # Source
+Accession: PRJNA1039783 ID: 1039783
 I have chosen metadata from "Severe acute respiratory syndrome coronavirus 2",submitted by the PA Department of Health Bureau of Laboratories Submission Group. I also plan on comparing different counties in Pensylvania: Allegheny County,Capital Region Water(Dauphin County),Erie County and Indiana Borough.(Indiana County)
 
 # Overall goals
