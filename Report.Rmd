@@ -83,16 +83,24 @@ vcf_with_metadata <-
 
 # Figures
 
-```{r figure-1,sequencing-coverage-by-region}
+```{r figure-1, echo=TRUE, warning=FALSE, message=FALSE}
 # Load required libraries
 library(ggplot2)
 library(dplyr)
 
-# Load the data (replace with your dataset's actual path if necessary)
-data <- read.csv(params$sra_runtable_path)
+# Source functions
+source("code/functions/read_gff.R")
+source("code/functions/extract_genes_from_gff.R")
+source("code/functions/parse_tidy_and_stack_vcfs.R")
+source("code/functions/add_genes_metadata_to_vcfstack.R")
+
+# Load the preprocessed data
+# Assuming the preprocessing steps are handled earlier in the report, and `params$sra_runtable_path` is accurate
+data <- read.csv("data/00_sra_runtable/SraRunTable.csv")  # Adjust the path if needed
 
 # Convert Collection_Date to Date format
-data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
+data$Collection_Date <- as.Date(data$Collection_Date
+                                , format = "%m/%d/%y")
 
 # Normalize Sequencing Coverage by Population Size
 data <- data %>%
@@ -110,7 +118,6 @@ ggplot(data, aes(x = Collection_Date, y = Bases_per_person, color = geo_loc_name
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 ```
 
 **Figure 1**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
@@ -119,6 +126,12 @@ The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person)
 ```{r figure-2-sampling-methods, echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=6}
 library(ggplot2)
 library(dplyr)
+
+# Source functions
+source("code/functions/read_gff.R")
+source("code/functions/extract_genes_from_gff.R")
+source("code/functions/parse_tidy_and_stack_vcfs.R")
+source("code/functions/add_genes_metadata_to_vcfstack.R")
 
 data <- read.csv(params$sra_runtable_path)
 data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
@@ -153,6 +166,12 @@ The left box plot compares sequencing coverage per person across different sampl
 library(ggplot2)
 library(dplyr)
 
+# Source functions
+source("code/functions/read_gff.R")
+source("code/functions/extract_genes_from_gff.R")
+source("code/functions/parse_tidy_and_stack_vcfs.R")
+source("code/functions/add_genes_metadata_to_vcfstack.R")
+
 # Load the data
 data <- read.csv(params$sra_runtable_path)
 
@@ -181,10 +200,17 @@ The scatter plot illustrates the relationship between population size and sequen
 library(dplyr)
 library(knitr)
 
+# Source custom functions
+source("code/functions/read_gff.R")
+source("code/functions/extract_genes_from_gff.R")
+source("code/functions/parse_tidy_and_stack_vcfs.R")
+source("code/functions/add_genes_metadata_to_vcfstack.R")
+
 # Load the data
 data <- read.csv(params$sra_runtable_path)
 
 # Convert Collection_Date to Date format
+
 data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
 
 # Normalize Sequencing Coverage by Population Size
