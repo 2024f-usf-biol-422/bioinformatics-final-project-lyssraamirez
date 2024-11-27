@@ -70,35 +70,135 @@ vcf_with_metadata <-
 
 # Figures
 
-```{r sample-plot}
-# create a plot of unique SNP locations within each gene across all samples
-vcf_with_metadata %>%
-  filter(!is.na(gene)) %>% # get rid of SNPs not in gene regions
-  group_by(gene, pos) %>%
-  tally() %>% # this gives a column n for the number of gene by position
-  group_by(gene) %>%
-  tally() %>% # this collapses that down to the number of unique SNP locations
-  ggplot(aes(x = gene,
-             y = n)) +
-  geom_col() +
-  labs(title = "Count of distinct SNPs in Named SARS-CoV-2 Genes",
-       x = "Gene Name") +
-  theme_few() # get rid of the grey background
+```{r figure-1,sequencing-coverage-by-region}
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Load the data (replace with your dataset's actual path if necessary)
+data <- read.csv(params$sra_runtable_path)
+
+# Convert Collection_Date to Date format
+data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
+
+# Normalize Sequencing Coverage by Population Size
+data <- data %>%
+  mutate(Bases_per_person = Bases / ww_population)
+
+# Create the line plot
+ggplot(data, aes(x = Collection_Date, y = Bases_per_person, color = geo_loc_name)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Normalized Sequencing Coverage Over Time by Region",
+    x = "Collection Date",
+    y = "Sequencing Coverage per Person",
+    color = "Region"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
-**Figure 1**: N and S genes have more unique SNPs in the set of samples analyzed.
+**Figure 1**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
+The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania. Peaks in sequencing coverage may reflect variations in viral prevalence, sampling methods, or population size adjustments. The data are normalized to account for differences in population size represented by each sample.
+
+```{r figure-2-sampling-methods, echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=6}
+library(ggplot2)
+library(dplyr)
+
+data <- read.csv(params$sra_runtable_path)
+data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
+data <- data %>%
+  mutate(Bases_per_person = Bases / ww_population)
+
+p1 <- ggplot(data, aes(x = ww_sample_matrix, y = Bases_per_person)) +
+  geom_boxplot(fill = "skyblue", alpha = 0.7) +
+  labs(
+    title = "Impact of Sampling Matrix on Normalized Sequencing Coverage",
+    x = "Sampling Matrix",
+    y = "Sequencing Coverage per Person"
+  ) +
+  theme_minimal()
+
+p2 <- ggplot(data, aes(x = ww_sample_type, y = Bases_per_person)) +
+  geom_boxplot(fill = "orange", alpha = 0.7) +
+  labs(
+    title = "Impact of Sampling Type on Normalized Sequencing Coverage",
+    x = "Sampling Type",
+    y = "Sequencing Coverage per Person"
+  ) +
+  theme_minimal()
+
+library(gridExtra)
+grid.arrange(p1, p2, ncol = 2)
+```
+**Figure 2:**Impact of Sampling Methods on Normalized SARS-CoV-2 Sequencing Coverage
+The left box plot compares sequencing coverage per person across different sampling matrices (e.g., "post grit removal" vs. "raw wastewater"). The right boxplot compares sequencing coverage per person across sampling types (e.g., "composite" vs. "grab"). Composite samples show higher variability in SARS-CoV-2 detection, likely due to their ability to aggregate data over time, while raw wastewater samples may retain higher RNA integrity. These comparisons highlight the influence of methodological choices on viral prevalence estimates.
+
+```{r-figure-3-population-correlation, echo=FALSE, warning=FALSE, message=FALSE}
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+
+# Load the data (path is set as a parameter in the YAML header)
+data <- read.csv(params$sra_runtable_path)
+
+# Convert Collection_Date to Date format
+data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
+
+# Scatter plot with linear regression line
+ggplot(data, aes(x = ww_population, y = Bases, color = Collection_Date)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue", linetype = "dashed") +
+  labs(
+    title = "Correlation Between Population Size and Sequencing Coverage",
+    x = "Population Size",
+    y = "Sequencing Coverage",
+    color = "Collection Date"
+  ) +
+  theme_minimal()
+```
+**Figure 3:** Correlation Between Population Size and Sequencing Coverage in Wastewater Samples
+The scatter plot illustrates the relationship between population size and sequencing coverage (SARS-CoV-2 RNA levels) in wastewater samples. A linear regression line is included to assess trends and the strength of correlation. Points are colored by collection date to explore temporal changes in the relationship.
 
 # Tables
 
-```{r example-table}
-# An example table to show the length of each gene using its start and end
-gene_table %>%
-  mutate(length = end - start) %>%
-  select(gene_name, start, end, length) %>%
-  knitr::kable(col.names = c("Gene Name",
-                             "Start",
-                             "End",
-                             "Length"))
+
+```{r summary-table, echo=FALSE}
+library(dplyr)
+library(knitr)
+
+# Load the data
+data <- read.csv(params$sra_runtable_path)
+
+# Convert Collection_Date to Date format
+data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
+
+# Normalize Sequencing Coverage by Population Size
+data <- data %>%
+  mutate(Bases_per_person = Bases / ww_population)
+
+# Summarize sequencing coverage by sampling method
+summary_table <- data %>%
+  group_by(ww_sample_matrix, ww_sample_type) %>%
+  summarize(
+    Mean_Coverage = mean(Bases_per_person, na.rm = TRUE),
+    Median_Coverage = median(Bases_per_person, na.rm = TRUE),
+    Min_Coverage = min(Bases_per_person, na.rm = TRUE),
+    Max_Coverage = max(Bases_per_person, na.rm = TRUE),
+    Sample_Count = n()
+  )
+
+# Display the table
+kable(
+  summary_table,
+  col.names = c(
+    "Sample Matrix", "Sample Type", "Mean Coverage", 
+    "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"
+  ),
+  caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
+)
 ```
 
 **Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
