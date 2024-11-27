@@ -8,7 +8,7 @@ bibliography: references.bib
 params:
   gff_file_path: "data/metadata/sars_refgenome_annotation.gff"
   vcf_dir_path: "data/11_vcf_output_for_R"
-  sra_runtable_path: "data/00_sra_runtable/SraRunTable_PRJNA656695_short_example.txt"
+  sra_runtable_path: "data/00_sra_runtable/SraRunTable.csv"
 ---
 
 ```{r setup, include = FALSE}
