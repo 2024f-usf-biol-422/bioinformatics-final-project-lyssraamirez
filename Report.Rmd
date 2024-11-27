@@ -1,5 +1,5 @@
 ---
-title: 'SARs CoV2 water waste analysis final project'
+title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples: SNP Distribution, Temporal Trends, and Correlation with Population'
 author: "Alyssa Ramirez"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
@@ -20,9 +20,21 @@ knitr::opts_chunk$set(echo = FALSE,
 
 # Background and Overview
 
-This is a report on SARS-CoV-2, including some variant analysis [@koyama2020variant].
+The primary objective of this analysis was to explore SARS-CoV-2 prevalence in Pennsylvania wastewater samples. This project focused on understanding the distribution of single nucleotide polymorphisms (SNPs) within the viral genome and how they varied across geographic locations, sampling techniques, and temporal trends. Using publicly available sequencing data and associated metadata, we sought to answer the following research question:
+
+How does the prevalence of SARS-CoV-2 in wastewater samples correlate with population size, sampling methods, and geographic location over time?
+
+To address this question, we employed a bioinformatics workflow that integrated raw VCF files, GFF annotations, and population metadata. The analyses were performed using custom R scripts, including functions provided by the instructor, and the outputs were used to generate informative figures and tables. The results demonstrated clear spatial and temporal patterns in SARS-CoV-2 prevalence and identified genes with significant SNP counts.
+
+
 
 # Methods
+Custom R functions provided by the instructor were used for key data processing steps:
+
+1.read_gff: Read and parsed the GFF genome annotation file to extract genomic regions of interest.
+2.extract_genes_from_gff: Filtered and cleaned the GFF data to produce a gene table containing genomic coordinates and gene names.
+3.parse_tidy_and_stack_vcfs: Processed and combined multiple VCF files into a single tidy dataset, adding sample-specific metadata.
+4.add_genes_metadata_to_vcfstack: Annotated SNPs with gene information by merging the tidy VCF data with the cleaned gene table and sequencing metadata.
 
 See the set of tutorials on the [vcfR package website](https://knausb.github.io/vcfR_documentation/index.html).
 
@@ -48,6 +60,7 @@ library("ggthemes")
 function_paths <- list.files("code/functions", full.names = TRUE)
 purrr::walk(function_paths, source)
 ```
+
 
 ```{r load-vcf-data}
 # load in, tidy, and stack all of the VCF files in the target directory
@@ -136,12 +149,11 @@ grid.arrange(p1, p2, ncol = 2)
 **Figure 2:**Impact of Sampling Methods on Normalized SARS-CoV-2 Sequencing Coverage
 The left box plot compares sequencing coverage per person across different sampling matrices (e.g., "post grit removal" vs. "raw wastewater"). The right boxplot compares sequencing coverage per person across sampling types (e.g., "composite" vs. "grab"). Composite samples show higher variability in SARS-CoV-2 detection, likely due to their ability to aggregate data over time, while raw wastewater samples may retain higher RNA integrity. These comparisons highlight the influence of methodological choices on viral prevalence estimates.
 
-```{r-figure-3-population-correlation, echo=FALSE, warning=FALSE, message=FALSE}
-# Load required libraries
+```{r figure-3-population-correlation, echo=FALSE, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(dplyr)
 
-# Load the data (path is set as a parameter in the YAML header)
+# Load the data
 data <- read.csv(params$sra_runtable_path)
 
 # Convert Collection_Date to Date format
@@ -159,11 +171,11 @@ ggplot(data, aes(x = ww_population, y = Bases, color = Collection_Date)) +
   ) +
   theme_minimal()
 ```
+
 **Figure 3:** Correlation Between Population Size and Sequencing Coverage in Wastewater Samples
 The scatter plot illustrates the relationship between population size and sequencing coverage (SARS-CoV-2 RNA levels) in wastewater samples. A linear regression line is included to assess trends and the strength of correlation. Points are colored by collection date to explore temporal changes in the relationship.
 
 # Tables
-
 
 ```{r summary-table, echo=FALSE}
 library(dplyr)
