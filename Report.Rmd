@@ -82,32 +82,42 @@ vcf_with_metadata <-
 ```
 
 # Figures
+```{r barplot-gene-distribution, echo=TRUE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
+# Group by gene and summarize SNP counts
+gene_snp_summary <- vcf_with_metadata %>%
+  group_by(gene) %>%  # Update this if your gene column has a different name
+  summarize(total_snps = n()) %>%
+  filter(!is.na(gene))
+
+# Create the bar plot
+ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
+                             fill = gene)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  labs(
+    title = "SNP Counts Across Different Genes",
+    x = "Gene",
+    y = "SNP Count",
+    fill = "Gene"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none"  # Hide legend for simplicity
+  )
+```
+
 
 ```{r figure-1, echo=TRUE, warning=FALSE, message=FALSE}
-# Load required libraries
-library(ggplot2)
-library(dplyr)
-
-# Source functions
-source("code/functions/read_gff.R")
-source("code/functions/extract_genes_from_gff.R")
-source("code/functions/parse_tidy_and_stack_vcfs.R")
-source("code/functions/add_genes_metadata_to_vcfstack.R")
-
-# Load the preprocessed data
-# Assuming the preprocessing steps are handled earlier in the report, and `params$sra_runtable_path` is accurate
-data <- read.csv("data/00_sra_runtable/SraRunTable.csv")  # Adjust the path if needed
-
 # Convert Collection_Date to Date format
-data$Collection_Date <- as.Date(data$Collection_Date
+vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date
                                 , format = "%m/%d/%y")
 
 # Normalize Sequencing Coverage by Population Size
-data <- data %>%
-  mutate(Bases_per_person = Bases / ww_population)
-
-# Create the line plot
-ggplot(data, aes(x = Collection_Date, y = Bases_per_person, color = geo_loc_name)) +
+data %>%
+  mutate(Bases_per_person = Bases / ww_population)%>%
+ggplot(aes(x = Collection_Date, 
+                 y = Bases_per_person, 
+                 color = geo_loc_name)) +
   geom_line() +
   geom_point() +
   labs(
@@ -118,81 +128,13 @@ ggplot(data, aes(x = Collection_Date, y = Bases_per_person, color = geo_loc_name
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 **Figure 1**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
 The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania. Peaks in sequencing coverage may reflect variations in viral prevalence, sampling methods, or population size adjustments. The data are normalized to account for differences in population size represented by each sample.
 
-```{r figure-2-sampling-methods, echo=FALSE, warning=FALSE, message=FALSE, fig.width=12, fig.height=6}
-library(ggplot2)
-library(dplyr)
-
-# Source functions
-source("code/functions/read_gff.R")
-source("code/functions/extract_genes_from_gff.R")
-source("code/functions/parse_tidy_and_stack_vcfs.R")
-source("code/functions/add_genes_metadata_to_vcfstack.R")
-
-data <- read.csv(params$sra_runtable_path)
-data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
-data <- data %>%
-  mutate(Bases_per_person = Bases / ww_population)
-
-p1 <- ggplot(data, aes(x = ww_sample_matrix, y = Bases_per_person)) +
-  geom_boxplot(fill = "skyblue", alpha = 0.7) +
-  labs(
-    title = "Impact of Sampling Matrix on Normalized Sequencing Coverage",
-    x = "Sampling Matrix",
-    y = "Sequencing Coverage per Person"
-  ) +
-  theme_minimal()
-
-p2 <- ggplot(data, aes(x = ww_sample_type, y = Bases_per_person)) +
-  geom_boxplot(fill = "orange", alpha = 0.7) +
-  labs(
-    title = "Impact of Sampling Type on Normalized Sequencing Coverage",
-    x = "Sampling Type",
-    y = "Sequencing Coverage per Person"
-  ) +
-  theme_minimal()
-
-library(gridExtra)
-grid.arrange(p1, p2, ncol = 2)
-```
-**Figure 2:**Impact of Sampling Methods on Normalized SARS-CoV-2 Sequencing Coverage
-The left box plot compares sequencing coverage per person across different sampling matrices (e.g., "post grit removal" vs. "raw wastewater"). The right boxplot compares sequencing coverage per person across sampling types (e.g., "composite" vs. "grab"). Composite samples show higher variability in SARS-CoV-2 detection, likely due to their ability to aggregate data over time, while raw wastewater samples may retain higher RNA integrity. These comparisons highlight the influence of methodological choices on viral prevalence estimates.
-
-```{r figure-3-population-correlation, echo=FALSE, warning=FALSE, message=FALSE}
-library(ggplot2)
-library(dplyr)
-
-# Source functions
-source("code/functions/read_gff.R")
-source("code/functions/extract_genes_from_gff.R")
-source("code/functions/parse_tidy_and_stack_vcfs.R")
-source("code/functions/add_genes_metadata_to_vcfstack.R")
-
-# Load the data
-data <- read.csv(params$sra_runtable_path)
-
-# Convert Collection_Date to Date format
-data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
-
-# Scatter plot with linear regression line
-ggplot(data, aes(x = ww_population, y = Bases, color = Collection_Date)) +
-  geom_point(alpha = 0.7, size = 3) +
-  geom_smooth(method = "lm", se = FALSE, color = "blue", linetype = "dashed") +
-  labs(
-    title = "Correlation Between Population Size and Sequencing Coverage",
-    x = "Population Size",
-    y = "Sequencing Coverage",
-    color = "Collection Date"
-  ) +
-  theme_minimal()
-```
-
-**Figure 3:** Correlation Between Population Size and Sequencing Coverage in Wastewater Samples
-The scatter plot illustrates the relationship between population size and sequencing coverage (SARS-CoV-2 RNA levels) in wastewater samples. A linear regression line is included to assess trends and the strength of correlation. Points are colored by collection date to explore temporal changes in the relationship.
 
 # Tables
 
@@ -231,11 +173,10 @@ summary_table <- data %>%
 # Display the table
 kable(
   summary_table,
-  col.names = c(
-    "Sample Matrix", "Sample Type", "Mean Coverage", 
-    "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"
-  ),
-  caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
+  col.names = c("Sample Matrix", "Sample Type", "Mean Coverage", 
+    "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
+  caption = "Summary Statistics of Normalized Sequencing Coverage by 
+  Sampling Method"
 )
 ```
 
