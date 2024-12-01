@@ -182,7 +182,6 @@ ggsave("population_vs_rna_detection.png", plot = scatter_plot, width = 8, height
 data <- read.csv(params$sra_runtable_path)
 
 # Convert Collection_Date to Date format
-
 data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
 
 # Normalize Sequencing Coverage by Population Size
@@ -200,14 +199,21 @@ summary_table <- data %>%
     Sample_Count = n()
   )
 
-# Display the table
-kable(
+# Create a kable table
+table_output <- kable(
   summary_table,
   col.names = c("Sample Matrix", "Sample Type", "Mean Coverage", 
-    "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
-  caption = "Summary Statistics of Normalized Sequencing Coverage by 
-  Sampling Method"
+                "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
+  caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
 )
+
+# Print the table
+print(table_output)
+
+# Save the table as a PNG file
+png("summary_table.png", width = 1200, height = 800)
+grid.table(summary_table)
+dev.off()
 ```
 
 **Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
