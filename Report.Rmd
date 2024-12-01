@@ -105,19 +105,19 @@ ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
     legend.position = "none"  # Hide legend for simplicity
   )
 ```
+**Figure 1**:
 
 
 ```{r figure-1, echo=TRUE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
-vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date
-                                , format = "%m/%d/%y")
+vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date, format = "%m/%d/%y")
 
-# Normalize Sequencing Coverage by Population Size
-data %>%
-  mutate(Bases_per_person = Bases / ww_population)%>%
-ggplot(aes(x = Collection_Date, 
-                 y = Bases_per_person, 
-                 color = geo_loc_name)) +
+# Normalize Sequencing Coverage by Population Size and create the plot
+normalized_plot <- data %>%
+  mutate(Bases_per_person = Bases / ww_population) %>%
+  ggplot(aes(x = Collection_Date, 
+             y = Bases_per_person, 
+             color = geo_loc_name)) +
   geom_line() +
   geom_point() +
   labs(
@@ -129,25 +129,55 @@ ggplot(aes(x = Collection_Date,
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Display the plot
+print(normalized_plot)
+
+# Save the plot as a PNG file
+ggsave("sequencing_coverage_plot.png", plot = normalized_plot, width = 10, height = 6, dpi = 300)
+
 ```
 
-**Figure 1**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
+**Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
 The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania. Peaks in sequencing coverage may reflect variations in viral prevalence, sampling methods, or population size adjustments. The data are normalized to account for differences in population size represented by each sample.
 
+
+```{r population-vs-rna-detection, echo=TRUE, warning=FALSE, message=FALSE}
+# Load the data using params
+data <- read.csv(params$sra_runtable_path)
+
+# Ensure relevant columns are numeric
+data$ww_population <- as.numeric(data$ww_population)
+data$Bases <- as.numeric(data$Bases)
+
+# Remove rows with missing or invalid data
+filtered_data <- data %>%
+  filter(!is.na(ww_population), !is.na(Bases))
+
+# Create the scatter plot
+scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
+  geom_point(alpha = 0.7, color = "blue") +
+  labs(
+    title = "Relationship Between Population Size and RNA Detection",
+    x = "Population Size",
+    y = "RNA Detection (Bases)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12)
+  )
+
+# Display the plot
+print(scatter_plot)
+
+# Save the plot as a PNG file
+ggsave("population_vs_rna_detection.png", plot = scatter_plot, width = 8, height = 6, dpi = 300)
+```
+**Figure 3**: Relationship between population size and rna detection
 
 # Tables
 
 ```{r summary-table, echo=FALSE}
-library(dplyr)
-library(knitr)
-
-# Source custom functions
-source("code/functions/read_gff.R")
-source("code/functions/extract_genes_from_gff.R")
-source("code/functions/parse_tidy_and_stack_vcfs.R")
-source("code/functions/add_genes_metadata_to_vcfstack.R")
-
 # Load the data
 data <- read.csv(params$sra_runtable_path)
 
