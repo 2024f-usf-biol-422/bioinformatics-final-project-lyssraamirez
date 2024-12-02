@@ -131,10 +131,6 @@ normalized_plot <- data %>%
 
 # Display the plot
 print(normalized_plot)
-
-# Save the plot as a PNG file
-ggsave("sequencing_coverage_plot.png", plot = normalized_plot, width = 10, height = 6, dpi = 300)
-
 ```
 
 **Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
@@ -169,12 +165,38 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
 
 # Display the plot
 print(scatter_plot)
-
-# Save the plot as a PNG file
-ggsave("population_vs_rna_detection.png", plot = scatter_plot, width = 8, height = 6, dpi = 300)
 ```
 **Figure 3**: Relationship between population size and rna detection
 
+
+```{r summary-table, echo=FALSE} 
+# Load the data
+data <- read.csv(params$sra_runtable_path)
+
+# Ensure columns are numeric
+data$ww_population <- as.numeric(data$ww_population)
+data$AvgSpotLen <- as.numeric(data$AvgSpotLen)
+
+# Filter rows with missing or invalid data
+filtered_data <- data %>%
+  filter(!is.na(ww_population), !is.na(AvgSpotLen))
+
+# Create the scatter plot
+ggplot(filtered_data, aes(x = ww_population, y = AvgSpotLen)) +
+  geom_point(alpha = 0.7, color = "blue") +
+  geom_smooth(method = "lm", color = "red", se = FALSE) + # Add a linear trend line
+  labs(
+    title = "Relationship Between Population Size and AvgSpotLen",
+    x = "Population Size",
+    y = "Average Spot Length (AvgSpotLen)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
 # Tables
 
 ```{r summary-table, echo=FALSE}
@@ -215,6 +237,9 @@ png("summary_table.png", width = 1200, height = 800)
 grid.table(summary_table)
 dev.off()
 ```
+
+
+
 
 **Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
 
