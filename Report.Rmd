@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE,
 
 The primary objective of this analysis was to explore SARS-CoV-2 prevalence in Pennsylvania wastewater samples. This project focused on understanding the distribution of single nucleotide polymorphisms (SNPs) within the viral genome and how they varied across geographic locations, sampling techniques, and temporal trends. Using publicly available sequencing data and associated metadata, we sought to answer the following research question:
 
-How does the prevalence of SARS-CoV-2 in wastewater samples correlate with population size, sampling methods, and geographic location over time?
+How does the prevalence of SARS-CoV-2 in wastewater samples correlate with population size, sampling methods, and changes over time?
 
 To address this question, we employed a bioinformatics workflow that integrated raw VCF files, GFF annotations, and population metadata. The analyses were performed using custom R scripts, including functions provided by the instructor, and the outputs were used to generate informative figures and tables. The results demonstrated clear spatial and temporal patterns in SARS-CoV-2 prevalence and identified genes with significant SNP counts.
 
@@ -55,6 +55,7 @@ library("vcfR")
 library("ggplot2")
 library("dplyr")
 library("ggthemes")
+library("knitr")
 
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
@@ -108,13 +109,14 @@ ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
 **Figure 1**:
 
 
+
 ```{r figure-1, echo=TRUE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
 vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date, format = "%m/%d/%y")
 
 # Normalize Sequencing Coverage by Population Size and create the plot
-normalized_plot <- data %>%
-  mutate(Bases_per_person = Bases / ww_population) %>%
+normalized_plot <- vcf_with_metadata %>%
+  mutate(Bases_per_person = Bases / ww_population) %>%  # Corrected mutate
   ggplot(aes(x = Collection_Date, 
              y = Bases_per_person, 
              color = geo_loc_name)) +
@@ -168,8 +170,7 @@ print(scatter_plot)
 ```
 **Figure 3**: Relationship between population size and rna detection
 
-
-```{r summary-table, echo=FALSE} 
+```{r scatter-plot, echo=FALSE}
 # Load the data
 data <- read.csv(params$sra_runtable_path)
 
@@ -181,10 +182,10 @@ data$AvgSpotLen <- as.numeric(data$AvgSpotLen)
 filtered_data <- data %>%
   filter(!is.na(ww_population), !is.na(AvgSpotLen))
 
-# Create the scatter plot
-ggplot(filtered_data, aes(x = ww_population, y = AvgSpotLen)) +
+# Create the scatter plot and assign it to a variable
+scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = AvgSpotLen)) +
   geom_point(alpha = 0.7, color = "blue") +
-  geom_smooth(method = "lm", color = "red", se = FALSE) + # Add a linear trend line
+  geom_smooth(method = "lm", color = "red", se = FALSE) +
   labs(
     title = "Relationship Between Population Size and AvgSpotLen",
     x = "Population Size",
@@ -196,16 +197,17 @@ ggplot(filtered_data, aes(x = ww_population, y = AvgSpotLen)) +
     axis.title = element_text(size = 12),
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
+
+# Save the plot as a .png file
+ggsave("population_vs_avgspotlen.png", plot = scatter_plot, width = 10, height = 6, dpi = 300)
+
+# Display the plot in the RStudio Viewer
+scatter_plot
 ```
+
 # Tables
 
 ```{r summary-table, echo=FALSE}
-# Load the data
-data <- read.csv(params$sra_runtable_path)
-
-# Convert Collection_Date to Date format
-data$Collection_Date <- as.Date(data$Collection_Date, format = "%m/%d/%y")
-
 # Normalize Sequencing Coverage by Population Size
 data <- data %>%
   mutate(Bases_per_person = Bases / ww_population)
@@ -218,13 +220,14 @@ summary_table <- data %>%
     Median_Coverage = median(Bases_per_person, na.rm = TRUE),
     Min_Coverage = min(Bases_per_person, na.rm = TRUE),
     Max_Coverage = max(Bases_per_person, na.rm = TRUE),
-    Sample_Count = n()
+    Sample_Count = n(),
+    .groups = "drop" # Suppresses regrouping warning
   )
 
 # Create a kable table
 table_output <- kable(
   summary_table,
-  col.names = c("Sample Matrix", "Sample Type", "Mean Coverage", 
+  col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
                 "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
   caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
 )
@@ -232,10 +235,6 @@ table_output <- kable(
 # Print the table
 print(table_output)
 
-# Save the table as a PNG file
-png("summary_table.png", width = 1200, height = 800)
-grid.table(summary_table)
-dev.off()
 ```
 
 
