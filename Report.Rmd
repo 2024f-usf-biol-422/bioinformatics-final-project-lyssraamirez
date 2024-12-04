@@ -113,12 +113,11 @@ ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
 ```{r figure-1,normalized-sequence-coverage, echo=TRUE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
 vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date, format = "%m/%d/%y")
-
 # Normalize Sequencing Coverage by Population Size and create the plot
 normalized_plot <- vcf_with_metadata %>%
   mutate(Bases_per_person = Bases / ww_population) %>%  # Corrected mutate
   ggplot(aes(x = Collection_Date, 
-             y = Bases_per_person, 
+             y = Bases_per_person,
              color = geo_loc_name)) +
   geom_line() +
   geom_point() +
@@ -172,13 +171,13 @@ print(scatter_plot)
 
 ```{r Population-size-AVGspotlens, echo=FALSE}
 ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
-  geom_point(color = 'blue') +
-  geom_smooth(method = 'lm', color = 'red') +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", color = "red") +
   labs(
-    title = 'Relationship Between Population Size and AvgSpotLen',
-    x = 'Population Size',
-    y = 'Average Spot Length (AvgSpotLen)'
-  ) +
+    title = "Relationship Between Population Size and AvgSpotLen",
+    x = "Population Size",
+    y = "Average Spot Length (AvgSpotLen)"
+  ) + 
   theme_minimal()
 ```
 **Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
@@ -192,9 +191,9 @@ data <- read.csv(sra_runtable_path)
 ggplot(data, aes(x = ww_sample_type)) +
   geom_bar(fill = 'steelblue') +
   labs(
-    title = 'Distribution of Sampling Methods',
-    x = 'Sample Type',
-    y = 'Count'
+    title = "Distribution of Sampling Methods",
+    x = "Sample Type",
+    y = "Count"
   ) +
   theme_minimal()
 ```
@@ -211,17 +210,17 @@ summary_table <- data %>%
     Min_Coverage = min(Bases, na.rm = TRUE),
     Max_Coverage = max(Bases, na.rm = TRUE),
     Sample_Count = n(),
-    .groups = 'drop' # Suppresses regrouping warning
+    .groups = "drop" 
   )
-
 # Create and display the summary table using kable
 table_output <- summary_table %>%
   kable(
     col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
-                  "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
-    caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
+                  "Median Coverage", "Min Coverage", "Max Coverage",
+                  "Sample Count"),
+    caption = "Summary Statistics of Normalized Sequencing Coverage
+    by Sampling Method"
   )
-
 print(table_output)
 ```
 
