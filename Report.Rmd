@@ -175,9 +175,9 @@ ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   geom_point(color = "blue") +
   geom_smooth(method = "lm", color = "red") +
   labs(
-      title = "Relationship Between Population Size and AvgSpotLen",
-      x = "Population Size",
-      y = "Average Spot Length (AvgSpotLen)") +
+       title = "Relationship Between Population Size and AvgSpotLen",
+       x = "Population Size",
+       y = "Average Spot Length (AvgSpotLen)") +
   theme_minimal()
 ```
 **Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
@@ -205,12 +205,12 @@ ggplot(data, aes(x = ww_sample_type)) +
 summary_table <- data %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
   summarize(
-         Mean_Coverage = mean(Bases, na.rm = TRUE),
-         Median_Coverage = median(Bases, na.rm = TRUE),
-         Min_Coverage = min(Bases, na.rm = TRUE),
-         Max_Coverage = max(Bases, na.rm = TRUE),
-         Sample_Count = n(),
-        .groups = "drop")
+            Mean_Coverage = mean(Bases, na.rm = TRUE),
+            Median_Coverage = median(Bases, na.rm = TRUE),
+            Min_Coverage = min(Bases, na.rm = TRUE),
+            Max_Coverage = max(Bases, na.rm = TRUE),
+            Sample_Count = n(),
+              .groups = "drop")
 # Create and display the summary table using kable
 table_output <- summary_table %>%
   kable(
