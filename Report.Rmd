@@ -205,12 +205,12 @@ ggplot(data, aes(x = ww_sample_type)) +
 summary_table <- data %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
   summarize(
-    Mean_Coverage = mean(Bases, na.rm = TRUE),
-    Median_Coverage = median(Bases, na.rm = TRUE),
-    Min_Coverage = min(Bases, na.rm = TRUE),
-    Max_Coverage = max(Bases, na.rm = TRUE),
-    Sample_Count = n(),
-    .groups = "drop")
+         Mean_Coverage = mean(Bases, na.rm = TRUE),
+         Median_Coverage = median(Bases, na.rm = TRUE),
+         Min_Coverage = min(Bases, na.rm = TRUE),
+         Max_Coverage = max(Bases, na.rm = TRUE),
+         Sample_Count = n(),
+        .groups = "drop")
 # Create and display the summary table using kable
 table_output <- summary_table %>%
   kable(
