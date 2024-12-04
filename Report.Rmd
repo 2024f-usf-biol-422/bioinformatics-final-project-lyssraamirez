@@ -210,7 +210,7 @@ summary_table <- data %>%
             Min_Coverage = min(Bases, na.rm = TRUE),
             Max_Coverage = max(Bases, na.rm = TRUE),
             Sample_Count = n(),
-              .groups = "drop")
+                .groups = "drop")
 # Create and display the summary table using kable
 table_output <- summary_table %>%
   kable(
