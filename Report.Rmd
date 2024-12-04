@@ -175,9 +175,9 @@ ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   geom_point(color = "blue") +
   geom_smooth(method = "lm", color = "red") +
   labs(
-    title = "Relationship Between Population Size and AvgSpotLen",
-    x = "Population Size",
-    y = "Average Spot Length (AvgSpotLen)") +
+      title = "Relationship Between Population Size and AvgSpotLen",
+      x = "Population Size",
+      y = "Average Spot Length (AvgSpotLen)") +
   theme_minimal()
 ```
 **Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
