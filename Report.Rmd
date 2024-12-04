@@ -170,7 +170,7 @@ print(scatter_plot)
 ```
 **Figure 3**: Relationship between population size and rna detection
 
-```{r-Population_size_AVGspotlens_regression_line, echo=FALSE}
+```{r Population-size-AVGspotlens, echo=FALSE}
 ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   geom_point(color = 'blue') +
   geom_smooth(method = 'lm', color = 'red') +
@@ -181,8 +181,9 @@ ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   ) +
   theme_minimal()
 ```
+**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
 
-```{r summary-table, echo=FALSE}
+```{r boxplot-composite-grab-table, echo=FALSE}
 # Load the dataset using the sra_runtable_path parameter
 sra_runtable_path <- "data/00_sra_runtable/SraRunTable.csv"
 data <- read.csv(sra_runtable_path)
@@ -198,51 +199,30 @@ ggplot(data, aes(x = ww_sample_type)) +
   theme_minimal()
 ```
 
+```
+
 **Figure 4:** Box plot showing the distribution of sequencing base counts for different sample matrices ('post grit removal' and 'raw wastewater'), categorized by sampling methods ('composite' and 'grab'). The median, interquartile range, and outliers are displayed, highlighting how the sampling matrix and method impact the RNA yield, which could influence SARS-CoV-2 detection accuracy.
 
 
-```{r summary-table, echo=FALSE}
-ggplot(summary_table, aes(x = ww_sample_matrix, y = Mean_Coverage, fill = ww_sample_type)) +
-  geom_bar(stat = 'identity', position = 'dodge') +
-  labs(
-    title = 'Mean Coverage Comparison by Sample Type and Matrix',
-    x = 'Sample Matrix',
-    y = 'Mean Coverage (Bases)',
-    fill = 'Sample Type'
-  ) +
-  theme_minimal()
-```
+
 # Tables
 
-```{r summary-table, echo=FALSE}
-# Normalize Sequencing Coverage by Population Size
-data <- data %>%
-  mutate(Bases_per_person = Bases / ww_population)
-
-# Summarize sequencing coverage by sampling method
-summary_table <- data %>%
-  group_by(ww_sample_matrix, ww_sample_type) %>%
-  summarize(
-    Mean_Coverage = mean(Bases_per_person, na.rm = TRUE),
-    Median_Coverage = median(Bases_per_person, na.rm = TRUE),
-    Min_Coverage = min(Bases_per_person, na.rm = TRUE),
-    Max_Coverage = max(Bases_per_person, na.rm = TRUE),
-    Sample_Count = n(),
-    .groups = "drop" # Suppresses regrouping warning
-  )
-
+```{r summary-kable-table, echo=FALSE}
 # Create a kable table
 table_output <- kable(
   summary_table,
   col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
-                "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
-  caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
+                "Median Coverage", "Min Coverage", "Max Coverage",
+                "Sample Count"),
+  caption = "Summary Statistics of Normalized Sequencing Coverage
+  by Sampling Method"
 )
 
 # Print the table
 print(table_output)
 
 ```
+
 
 
 
