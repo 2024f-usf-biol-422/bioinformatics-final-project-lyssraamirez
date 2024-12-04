@@ -49,6 +49,7 @@ You may also want to use any of a range of different COVID data packages and dat
 ## Subsections are ok too
 
 # Results and Discussion
+In this study, 
 
 ```{r load-packages-and-functions}
 library("vcfR")
@@ -61,7 +62,6 @@ library("knitr")
 function_paths <- list.files("code/functions", full.names = TRUE)
 purrr::walk(function_paths, source)
 ```
-
 
 ```{r load-vcf-data}
 # load in, tidy, and stack all of the VCF files in the target directory
