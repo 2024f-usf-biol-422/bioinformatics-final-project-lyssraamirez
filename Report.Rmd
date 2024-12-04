@@ -83,7 +83,7 @@ vcf_with_metadata <-
 ```
 
 # Figures
-```{r barplot-SNP_gene-distribution, echo=TRUE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
+```{r barplot-SNP-gene-distribution, echo=TRUE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
 # Group by gene and summarize SNP counts
 gene_snp_summary <- vcf_with_metadata %>%
   group_by(gene) %>%  # Update this if your gene column has a different name
@@ -110,7 +110,7 @@ ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
 
 
 
-```{r figure-1,normalized_sequence_coverage, echo=TRUE, warning=FALSE, message=FALSE}
+```{r figure-1,normalized-sequence-coverage, echo=TRUE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
 vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date, format = "%m/%d/%y")
 
@@ -199,28 +199,30 @@ ggplot(data, aes(x = ww_sample_type)) +
   theme_minimal()
 ```
 
-```
-
-**Figure 4:** Box plot showing the distribution of sequencing base counts for different sample matrices ('post grit removal' and 'raw wastewater'), categorized by sampling methods ('composite' and 'grab'). The median, interquartile range, and outliers are displayed, highlighting how the sampling matrix and method impact the RNA yield, which could influence SARS-CoV-2 detection accuracy.
-
-
-
 # Tables
 
-```{r summary-kable-table, echo=FALSE}
-# Create a kable table
-table_output <- kable(
-  summary_table,
-  col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
-                "Median Coverage", "Min Coverage", "Max Coverage",
-                "Sample Count"),
-  caption = "Summary Statistics of Normalized Sequencing Coverage
-  by Sampling Method"
-)
+```{r summary-table-single-chunk, echo=FALSE}
+# Summarize sequencing coverage by sampling method and create kable table
+summary_table <- data %>%
+  group_by(ww_sample_matrix, ww_sample_type) %>%
+  summarize(
+    Mean_Coverage = mean(Bases, na.rm = TRUE),
+    Median_Coverage = median(Bases, na.rm = TRUE),
+    Min_Coverage = min(Bases, na.rm = TRUE),
+    Max_Coverage = max(Bases, na.rm = TRUE),
+    Sample_Count = n(),
+    .groups = 'drop' # Suppresses regrouping warning
+  )
 
-# Print the table
+# Create and display the summary table using kable
+table_output <- summary_table %>%
+  kable(
+    col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
+                  "Median Coverage", "Min Coverage", "Max Coverage", "Sample Count"),
+    caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
+  )
+
 print(table_output)
-
 ```
 
 
