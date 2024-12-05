@@ -57,7 +57,7 @@ library("ggplot2")
 library("dplyr")
 library("ggthemes")
 library("knitr")
-
+library("gridExtra")
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
 purrr::walk(function_paths, source)
@@ -194,7 +194,6 @@ ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
 # Load the dataset using the sra_runtable_path parameter
 sra_runtable_path <- "data/00_sra_runtable/SraRunTable.csv"
 data <- read.csv(sra_runtable_path)
-
 # Create the bar plot for distribution of sampling methods
 sampling_methods_plot <- ggplot(data, aes(x = ww_sample_type)) +
   geom_bar(fill = "steelblue") +
@@ -211,7 +210,9 @@ ggsave(filename = "distribution_sampling_methods.png", plot = sampling_methods_p
 **Figure 5:** 
 ```{r genome-bar-graph, echo=FALSE}
 # Filter dataset
-common_variants <- common_variants %>%
+common_variants <- vcf_with_metadata %>%
+  group_by(ref, alt) %>%
+  summarize(Count = n(), .groups = 'drop') %>%
   filter(Count > 500)
 # Create a bar plot to visualize the reference vs. alternate genome 
 ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
@@ -226,15 +227,9 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10) 
   )
-
 ```
 #Tables
 ```{r summary-table-single-chunk, echo=FALSE}
-# Load necessary libraries
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-
 # Summarize sequencing coverage by sampling method
 summary_table <- data %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
@@ -246,13 +241,10 @@ summary_table <- data %>%
     Sample_Count = n(),
     .groups = "drop"
   )
-
 # Create a data frame for easy conversion to a table
 summary_table_df <- as.data.frame(summary_table)
-
 # Create a table using ggplot
 table_plot <- tableGrob(summary_table_df)
-
 # Save the table plot as a PNG file
 output_file <- "summary_table_output.png"
 ggsave(filename = output_file, plot = table_plot, width = 10, height = 8, dpi = 300, device = "png")
