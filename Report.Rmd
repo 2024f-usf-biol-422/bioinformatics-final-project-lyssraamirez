@@ -57,7 +57,7 @@ library("ggplot2")
 library("dplyr")
 library("ggthemes")
 library("knitr")
-library("gridExtra")
+
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
 purrr::walk(function_paths, source)
