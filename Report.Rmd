@@ -30,27 +30,16 @@ The primary goal of this study is to evaluate how collection periods, sampling m
 
 
 # Methods
-Custom R functions provided by the instructor were used for key data processing steps:
+Wastewater samples were collected from various locations across Pennsylvania from the Pennsylvania Wastewater Surveillance System (PAWSS). Samples were gathered at different times using both composite and grab sampling methods. Composite samples were collected over a duration of 24 hours and is more of an average of the samples. As the grab samples were a one time or single time collection. Viral RNA was extracted from the wastewater samples using surveillance protocols, which are first filtration, then concentration, and lastly RNA purification processes. After the RNA was purified, reverse-transcribed to cDNA using Reverse Transcription Polymerase Chain Reaction (RT-PCR), which converts the RNA into DNA for sequencing. The cDNA was then sequenced. Sequencing and tabular data are part of the set from PAWSS.The GFF annotations and VCF files were processed to extract SNP data and other relevant data within the metadata.
 
-1.read_gff: Read and parsed the GFF genome annotation file to extract genomic regions of interest.
-2.extract_genes_from_gff: Filtered and cleaned the GFF data to produce a gene table containing genomic coordinates and gene names.
-3.parse_tidy_and_stack_vcfs: Processed and combined multiple VCF files into a single tidy dataset, adding sample-specific metadata.
-4.add_genes_metadata_to_vcfstack: Annotated SNPs with gene information by merging the tidy VCF data with the cleaned gene table and sequencing metadata.
+Data was then cleaned and sorted out of the raw dataset. The pipeline was used to filter in the clean data.The pipeline used call functions to work cleanly;read_gff: Read and parsed the GFF genome annotation file to extract genomic regions of interest.;extract_genes_from_gff: Filtered and cleaned the GFF data to produce a gene table containing genomic coordinates and gene names.;parse_tidy_and_stack_vcfs: Processed and combined multiple VCF files into a single tidy dataset, adding sample-specific metadata.;add_genes_metadata_to_vcfstack: Annotated SNPs with gene information by merging the tidy VCF data with the cleaned gene table and sequencing metadata.
+The PAWWS  was then converted into a sraRuntable to be able to call on in the code. R studio packages were utilized, including “vcfR”, “ggplot2”, “ggthemes”, “knitr” and “dplyr” were used to visualize the data. Figures and tables were generated to illustrate SNP distribution, population trends, temporal patterns, and relationships between variables. Chat Gpt was also used to write the code of figures in this study.
 
-See the set of tutorials on the [vcfR package website](https://knausb.github.io/vcfR_documentation/index.html).
+# Results 
+The SNP counts across different genes in Figure 1. show that the S gene has the highest number of SNPs, inferring that the mutation rate in the Pennsylvania region is much higher than any other parts of the viral genome. This is crucial to the virality of the S-genes spike protein that allows for a higher infection rate. Figure 2. Illustrates the relationship between population size and average spot length of sequencing reads with a slight correlation. This scatterplot suggests that the larger populations may contribute to shorter read lengths in SNPs. Potentially due to increasing sample  and RNA complexity. A similar trend was observed in Figure 3. Which illustrates the relationship between population size and RNA detection levels. This scatterplot showed a positive correlation, indicating that larger populations will contribute to be more consistent in RNA detection and viral shedding. An observation of temporal trends is illustrated in Figure 4. Comparing sequence coverage over time in the Pennsylvania region. The plot shows fluctuations in coverage with certain months being observed as high and some as low changes in viral prevalence. The trends could be linked to local SARS-CoV-2 cases, providing valuable insight for public health. In Figure 5. the box plot compares sample matrices of composite and grabs sample data. Composite samples are higher because they reduce temporal variability and provide a more representative picture of SARS-CoV-2 levels. In Figure 6. The bar plot shows the common reference versus alternate genome variants. The counts of variants are classified by reference genome nucleotide (A, C, G, T) and their corresponding alternate genomes. Nucleotide T was the most frequently observed, showing that thymine is the most common variant in the region.  Lastly, table 1. Shows an overall summary of all figure data.
 
-You may also want to use any of a range of different COVID data packages and data sources:
-
-* https://kjhealy.github.io/covdata/
-* https://github.com/como-ph/oxcovid19
-* https://ropensci.org/blog/2020/10/20/searching-medrxivr-and-biorxiv-preprint-data/
-* https://covidtracking.com/data/api
-  * `readr::read_csv("https://api.covidtracking.com/v1/states/daily.csv")`
-
-## Subsections are ok too
-
-# Results and Discussion
-In this study, 
+#Discussion
+In conclusion, data suggest that sampling methods, population size and temporal trends significantly influence the detection of SARS-CoV-2 in wastewater. When it came down to which sampling method was deemed reliable and most effective, composite samples won over grab samples. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome.
 
 ```{r load-packages-and-functions}
 library("vcfR")
@@ -87,14 +76,12 @@ vcf_with_metadata <-
 ```{r barplot-SNP-gene-distribution, echo=TRUE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
 # Group by gene and summarize SNP counts
 gene_snp_summary <- vcf_with_metadata %>%
-  group_by(gene) %>%  # Update this if your gene column has a different name
+  group_by(gene) %>% # Update this if your gene column has a different name
   summarize(total_snps = n()) %>%
   filter(!is.na(gene))
 
 # Create the bar plot
-snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps),
-                                         y = total_snps,
-                             fill = gene)) +
+snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps, fill = gene)) +
   geom_bar(stat = "identity", alpha = 0.8) +
   labs(
     title = "SNP Counts Across Different Genes",
@@ -105,11 +92,15 @@ snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps),
   theme_minimal() +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "none"  # Hide legend for simplicity
+    legend.position = "none" # Hide legend for simplicity
   )
-# Save the plot to a file
-ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10, height = 8, dpi = 300)
 
+# Display the plot in RStudio
+print(snp_plot)
+
+# Save the plot to a file
+ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10,
+       height = 8, dpi = 300)
 ```
 **Figure 1**:Figure: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. This figure highlights which genes exhibit the highest mutation frequency, with the S gene having the largest number of SNPs, suggesting greater genetic variability in this region. Such information is crucial for understanding the genetic diversity and evolution of the virus in wastewater samples
 
@@ -135,7 +126,8 @@ normalized_plot <- vcf_with_metadata %>%
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+# Display the plot in RStudio
+print(normalized_plot)
 # Save the plot to a file
 ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
        width = 10, height = 8, dpi = 300)
@@ -169,10 +161,12 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     axis.title = element_text(size = 12)
   )
+# Display the plot in RStudio
+print(scatter_plot)
 # Save the plot to a file
 ggsave(filename = "population_vs_rna_detection.png", plot = scatter_plot, width = 10, height = 8, dpi = 300)
 ```
-**Figure 3**: Relationship between population size and rna detection
+**Figure 3**:Scatter plot showing the relationship between population size and RNA detection levels (measured as bases) in wastewater samples. Each point represents a data sample, and the distribution illustrates whether population size affects RNA detection variability.
 
 ```{r Population-size-AVGspotlens, echo=FALSE}
 # Create the scatter plot with regression line
@@ -184,7 +178,8 @@ avg_spotlen_plot <- ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
        x = "Population Size",
        y = "Average Spot Length (AvgSpotLen)") +
   theme_minimal()
-
+# Display the plot in RStudio
+print(avg_spotlen_plot)
 # Save the plot to a file
 ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
        width = 10, height = 8, dpi = 300)
@@ -195,6 +190,7 @@ ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
 # Load the dataset using the sra_runtable_path parameter
 sra_runtable_path <- "data/00_sra_runtable/SraRunTable.csv"
 data <- read.csv(sra_runtable_path)
+
 # Create the bar plot for distribution of sampling methods
 sampling_methods_plot <- ggplot(data, aes(x = ww_sample_type)) +
   geom_bar(fill = "steelblue") +
@@ -204,11 +200,16 @@ sampling_methods_plot <- ggplot(data, aes(x = ww_sample_type)) +
     y = "Count"
   ) +
   theme_minimal()
+
+# Display the plot in RStudio
+print(sampling_methods_plot)
+
 # Save the plot to a file
-ggsave(filename = "distribution_sampling_methods.png", plot = sampling_methods_plot, width = 10, height = 8, dpi = 300)
+ggsave(filename = "distribution_sampling_methods.png",
+       plot = sampling_methods_plot, width = 10, height = 8, dpi = 300)
 
 ```
-**Figure 5:** 
+**Figure 5**: Bar plot showing the distribution of sampling methods. The majority of samples were collected using composite sampling, while grab sampling was used much less frequently.
 ```{r genome-bar-graph, echo=FALSE}
 # Filter dataset
 common_variants <- vcf_with_metadata %>%
@@ -229,9 +230,13 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10) 
   )
 ```
+**Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
+
 #Tables
 ```{r summary-table-single-chunk, echo=FALSE}
-library(gridExtra)
+# Load necessary libraries
+library(gridExtra) # For tableGrob
+library(ggplot2)   # For saving the plot
 
 # Summarize sequencing coverage by sampling method
 summary_table <- vcf_with_metadata %>%
@@ -245,18 +250,14 @@ summary_table <- vcf_with_metadata %>%
     .groups = "drop"
   )
 
-# Create a data frame for table
-summary_table_df <- as.data.frame(summary_table)
+# Convert the table into a graphical table
+summary_table_grob <- tableGrob(summary_table)
 
-# Create a table plot using tableGrob
-table_plot <- tableGrob(summary_table_df)
-
-# Save the table plot as a PNG file
+# Save the table as a PNG
 output_file <- "summary_table_output.png"
-ggsave(filename = output_file, plot = table_plot, width = 10,
-       height = 8, dpi = 300, device = "png")
-
+ggsave(filename = output_file, plot = summary_table_grob, width = 10, height = 8, dpi = 300, device = "png")
 ```
-**Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
+**Table 1**: 
 
 # Sources Cited
+
