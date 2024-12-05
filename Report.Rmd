@@ -210,11 +210,10 @@ ggsave(filename = "distribution_sampling_methods.png", plot = sampling_methods_p
 ```
 **Figure 5:** 
 ```{r genome-bar-graph, echo=FALSE}
-# Filter dataset to only include common variants (e.g., variants with more than 500 occurrences)
+# Filter dataset
 common_variants <- common_variants %>%
   filter(Count > 500)
-
-# Create a bar plot to visualize the reference vs. alternate genome occurrences for common variants
+# Create a bar plot to visualize the reference vs. alternate genome 
 ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
   geom_bar(stat = 'identity', position = 'dodge') +
   labs(
@@ -225,7 +224,7 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10) # Combine rotation and size adjustment
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10) 
   )
 
 ```
