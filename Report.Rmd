@@ -91,7 +91,8 @@ gene_snp_summary <- vcf_with_metadata %>%
   filter(!is.na(gene))
 
 # Create the bar plot
-snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps,
+snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps),
+                                         y = total_snps,
                              fill = gene)) +
   geom_bar(stat = "identity", alpha = 0.8) +
   labs(
@@ -105,7 +106,6 @@ snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = tot
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "none"  # Hide legend for simplicity
   )
-
 # Save the plot to a file
 ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10, height = 8, dpi = 300)
 
@@ -136,7 +136,8 @@ normalized_plot <- vcf_with_metadata %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Save the plot to a file
-ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot, width = 10, height = 8, dpi = 300)
+ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
+       width = 10, height = 8, dpi = 300)
 ```
 
 **Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
@@ -167,7 +168,6 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     axis.title = element_text(size = 12)
   )
-
 # Save the plot to a file
 ggsave(filename = "population_vs_rna_detection.png", plot = scatter_plot, width = 10, height = 8, dpi = 300)
 ```
@@ -185,7 +185,8 @@ avg_spotlen_plot <- ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   theme_minimal()
 
 # Save the plot to a file
-ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot, width = 10, height = 8, dpi = 300)
+ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
+       width = 10, height = 8, dpi = 300)
 ```
 **Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
 
@@ -203,15 +204,38 @@ sampling_methods_plot <- ggplot(data, aes(x = ww_sample_type)) +
     y = "Count"
   ) +
   theme_minimal()
-
 # Save the plot to a file
 ggsave(filename = "distribution_sampling_methods.png", plot = sampling_methods_plot, width = 10, height = 8, dpi = 300)
 
 ```
+**Figure 5:** 
+```{r genome-bar-graph, echo=FALSE}
+# Filter dataset to only include common variants (e.g., variants with more than 500 occurrences)
+common_variants <- common_variants %>%
+  filter(Count > 500)
 
-# Tables
+# Create a bar plot to visualize the reference vs. alternate genome occurrences for common variants
+ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  labs(
+    title = "Distribution of Common Reference vs. Alternate Genome Variants",
+    x = "Reference Genome",
+    y = "Count of Variants",
+    fill = "Alternate Genome"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10) # Combine rotation and size adjustment
+  )
 
+```
+#Tables
 ```{r summary-table-single-chunk, echo=FALSE}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+
 # Summarize sequencing coverage by sampling method
 summary_table <- data %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
@@ -224,21 +248,15 @@ summary_table <- data %>%
     .groups = "drop"
   )
 
-# Create the summary table using kable
-table_output <- summary_table %>%
-  kable(
-    col.names = c("Sample Matrix", "Sample Type", "Mean Coverage",
-                  "Median Coverage", "Min Coverage", "Max Coverage",
-                  "Sample Count"),
-    caption = "Summary Statistics of Normalized Sequencing Coverage by Sampling Method"
-  )
+# Create a data frame for easy conversion to a table
+summary_table_df <- as.data.frame(summary_table)
 
-# Save the kable table output to a text file
-output_file <- "output.txt"
-write(capture.output(table_output), file = output_file)
+# Create a table using ggplot
+table_plot <- tableGrob(summary_table_df)
 
-# Optionally, print the table output to view in the console
-print(table_output)
+# Save the table plot as a PNG file
+output_file <- "summary_table_output.png"
+ggsave(filename = output_file, plot = table_plot, width = 10, height = 8, dpi = 300, device = "png")
 
 ```
 
