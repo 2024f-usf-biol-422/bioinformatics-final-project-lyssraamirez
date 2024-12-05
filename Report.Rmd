@@ -260,7 +260,7 @@ ggsave(filename = output_file, plot = summary_table_grob, width = 10, height = 8
 **Table 1**: 
 
 # Sources Cited
-```{r summary-table-single-chunk, echo=FALSE}
+```{r devtools-cite, echo=FALSE}
 devtools::session_info()
 
 ```
