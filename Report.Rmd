@@ -19,12 +19,13 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 # Background and Overview
+The monitoring and detection of SARS-CoV-2 RNA in water waste have emerged as another tool in aiding the surveillance of COVID-19 in populations. Water Waste surveillance provides non-invasive, cost-effective methods for  insights and trends in the spread in asymptomatic individuals. This approach has been useful in understanding hotspots, trends and other helpful insights that aid public health. Water waste surveillance also shows the evolutionary trends of SARS-CoV-2 strain advancements.
+This study utilizes Pennsylvania Waterwaste Surveillance systems (PAWSS) data, a statewide surveillance system that collects waste samples in diverse communities. The dataset includes metadata from Pennsylvania communities. Specifically data such as population sizes, sequencing information, temporal trends and sample collecting methods. PAWSS provides a comprehensive framework to evaluate temporal and spatial trends in SARS-CoV-2 prevalence across urban and rural regions of Pennsylvania.
 
-The primary objective of this analysis was to explore SARS-CoV-2 prevalence in Pennsylvania wastewater samples. This project focused on understanding the distribution of single nucleotide polymorphisms (SNPs) within the viral genome and how they vary across populations, sampling techniques, and temporal trends. Using public available sequencing data and associated metadata 
+Multiple factors influence the effectiveness and reliability of SARS-CoV-2 detection in wastewater samples. Specific sampling methods and collection times are crucial, as they can affect the concentration and virality of RNA. For example, composite samples may yield more data compared to grab samples, while collection during its peak viral periods may capture higher RNA levels. On the other hand, size of the population served by a wastewater treatment surveillance system can play a significant role in determining viral RNA detection. Larger populations may induce dilute viral signs due to wastewater volume, whereas smaller populations may achieve statistically significant viral RNA trends.
 
-To what extent do sampling methods, collection periods, and population size affect SARS-CoV-2 RNA detection in wastewater?
+The primary goal of this study is to evaluate how collection periods, sampling methods, genome evolution and population size impact SARS-CoV-2 RNA detection in wastewater. By using sequencing metadata on population size and time collecting samples, this analysis seeks to uncover trends and identify viral RNA strains in the reliability of the PAWSS. By normalizing sequence coverage and assessing temporal patterns, this study aims to contribute to the public health.
 
-To address this question, we employed a bioinformatics workflow that integrated raw VCF files, GFF annotations, and population metadata. The analyses were performed using custom R scripts, including functions provided by the instructor, and the outputs were used to generate informative figures and tables. The results demonstrated clear spatial and temporal patterns in SARS-CoV-2 prevalence and identified genes with significant SNP counts.
 
 
 
@@ -230,8 +231,10 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
 ```
 #Tables
 ```{r summary-table-single-chunk, echo=FALSE}
+library(gridExtra)
+
 # Summarize sequencing coverage by sampling method
-summary_table <- data %>%
+summary_table <- vcf_with_metadata %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
   summarize(
     Mean_Coverage = mean(Bases, na.rm = TRUE),
@@ -241,20 +244,19 @@ summary_table <- data %>%
     Sample_Count = n(),
     .groups = "drop"
   )
-# Create a data frame for easy conversion to a table
+
+# Create a data frame for table
 summary_table_df <- as.data.frame(summary_table)
-# Create a table using ggplot
+
+# Create a table plot using tableGrob
 table_plot <- tableGrob(summary_table_df)
+
 # Save the table plot as a PNG file
 output_file <- "summary_table_output.png"
-ggsave(filename = output_file, plot = table_plot, width = 10, height = 8, dpi = 300, device = "png")
+ggsave(filename = output_file, plot = table_plot, width = 10,
+       height = 8, dpi = 300, device = "png")
 
 ```
-
-
-
-
-
 **Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
 
 # Sources Cited
