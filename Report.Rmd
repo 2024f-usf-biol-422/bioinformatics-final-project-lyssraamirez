@@ -226,9 +226,8 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
     y = "Count of Variants",
     fill = "Alternate Genome"
   ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 10) 
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45,
+                                                     hjust = 1, size = 10) 
   )
 ```
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
