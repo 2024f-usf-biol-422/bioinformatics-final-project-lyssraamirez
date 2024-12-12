@@ -47,6 +47,7 @@ library("ggplot2")
 library("dplyr")
 library("ggthemes")
 library("knitr")
+library("grid")
 
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
