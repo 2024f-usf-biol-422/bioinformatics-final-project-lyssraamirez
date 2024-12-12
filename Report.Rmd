@@ -233,10 +233,23 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
 
 #Tables
-```{r summary-table-single-chunk, echo=FALSE}
-# Load necessary libraries
-library(gridExtra) # For tableGrob
-library(ggplot2)   # For saving the plot
+```{r save-summary-table, echo=FALSE, message=FALSE, warning=FALSE}
+# Summarize sequencing coverage by sampling method
+summary_table <- vcf_with_metadata %>%
+  group_by(ww_sample_matrix, ww_sample_type) %>%
+  summarize(
+    Mean_Coverage = mean(Bases, na.rm = TRUE),
+    Median_Coverage = median(Bases, na.rm = TRUE),
+    Min_Coverage = min(Bases, na.rm = TRUE),
+    Max_Coverage = max(Bases, na.rm = TRUE),
+    Sample_Count = n(),
+    .groups = "drop"
+  )
+
+# Save the table as a PNG file
+png("summary_table_output.png", width = 10, height = 8, units = "in", res = 300)
+grid.draw(tableGrob(summary_table))
+dev.off()
 
 # Summarize sequencing coverage by sampling method
 summary_table <- vcf_with_metadata %>%
@@ -250,13 +263,11 @@ summary_table <- vcf_with_metadata %>%
     .groups = "drop"
   )
 
-# Convert the table into a graphical table
-summary_table_grob <- tableGrob(summary_table)
+# Save the table as a PNG file
+png("summary_table_output.png", width = 10, height = 8, units = "in", res = 300)
+grid.table(summary_table)
+dev.off()
 
-# Save the table as a PNG
-output_file <- "summary_table_output.png"
-ggsave(filename = output_file, plot = summary_table_grob,
-       width = 10, height = 8, dpi = 300, device = "png")
 ```
 **Table 1**: 
 
