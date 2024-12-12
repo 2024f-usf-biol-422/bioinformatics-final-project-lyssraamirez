@@ -217,9 +217,9 @@ common_variants <- vcf_with_metadata %>%
   group_by(ref, alt) %>%
   summarize(Count = n(), .groups = "drop") %>%
   filter(Count > 500)
-# Create a bar plot to visualize the reference vs. alternate genome 
+# Create a bar plot to visualize the reference vs. alternate genome
 ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
-  geom_bar(stat = 'identity', position = "dodge") +
+  geom_bar(stat = "identity", position = "dodge") +
   labs(
     title = "Distribution of Common Reference vs. Alternate Genome Variants",
     x = "Reference Genome",
@@ -227,8 +227,8 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
     fill = "Alternate Genome"
   ) +
   theme_minimal() + theme(axis.text.x = element_text(angle = 45,
-                                                     hjust = 1, size = 10) 
-  )
+                                                     hjust = 1, size = 10)
+                          )
 ```
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
 
@@ -263,5 +263,4 @@ ggsave(filename = output_file, plot = summary_table_grob,
 # Sources Cited
 ```{r devtools-cite, echo=FALSE}
 devtools::session_info()
-
 ```
