@@ -81,7 +81,8 @@ gene_snp_summary <- vcf_with_metadata %>%
   filter(!is.na(gene))
 
 # Create the bar plot
-snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps), y = total_snps, fill = gene)) +
+snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps),
+                                         y = total_snps, fill = gene)) +
   geom_bar(stat = "identity", alpha = 0.8) +
   labs(
     title = "SNP Counts Across Different Genes",
@@ -163,7 +164,8 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
 # Display the plot in RStudio
 print(scatter_plot)
 # Save the plot to a file
-ggsave(filename = "population_vs_rna_detection.png", plot = scatter_plot, width = 10, height = 8, dpi = 300)
+ggsave(filename = "population_vs_rna_detection.png", plot = scatter_plot,
+       width = 10, height = 8, dpi = 300)
 ```
 **Figure 3**:Scatter plot showing the relationship between population size and RNA detection levels (measured as bases) in wastewater samples. Each point represents a data sample, and the distribution illustrates whether population size affects RNA detection variability.
 
@@ -213,11 +215,11 @@ ggsave(filename = "distribution_sampling_methods.png",
 # Filter dataset
 common_variants <- vcf_with_metadata %>%
   group_by(ref, alt) %>%
-  summarize(Count = n(), .groups = 'drop') %>%
+  summarize(Count = n(), .groups = "drop") %>%
   filter(Count > 500)
 # Create a bar plot to visualize the reference vs. alternate genome 
 ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
-  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_bar(stat = 'identity', position = "dodge") +
   labs(
     title = "Distribution of Common Reference vs. Alternate Genome Variants",
     x = "Reference Genome",
@@ -254,7 +256,8 @@ summary_table_grob <- tableGrob(summary_table)
 
 # Save the table as a PNG
 output_file <- "summary_table_output.png"
-ggsave(filename = output_file, plot = summary_table_grob, width = 10, height = 8, dpi = 300, device = "png")
+ggsave(filename = output_file, plot = summary_table_grob,
+       width = 10, height = 8, dpi = 300, device = "png")
 ```
 **Table 1**: 
 
