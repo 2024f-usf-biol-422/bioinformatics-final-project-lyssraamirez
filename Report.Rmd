@@ -1,6 +1,7 @@
 ---
 title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples: SNP Distribution, Temporal Trends, and Correlation with Population'
 author: "Alyssa Ramirez"
+email: "amramirez18@dons.usfca.edu"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 csl: bioinformatics.csl
@@ -42,13 +43,18 @@ The SNP counts across different genes in Figure 1. show that the S gene has the 
 In conclusion, data suggest that sampling methods, population size and temporal trends significantly influence the detection of SARS-CoV-2 in wastewater. When it came down to which sampling method was deemed reliable and most effective, composite samples won over grab samples. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome.
 
 ```{r load-packages-and-functions}
-library("vcfR")
-library("ggplot2")
-library("dplyr")
-library("ggthemes")
-library("knitr")
-library("grid")
-library("gridExtra")
+# Load all necessary libraries
+library(tidyverse)   # Includes ggplot2, dplyr, etc.
+library(rmarkdown)   # For rendering markdown files
+library(ggthemes)    # For themes in ggplot2
+library(RColorBrewer) # For color palettes
+library(magrittr)    # For pipes (%>%)
+library(vcfR)        # For handling VCF files
+library(janitor)     # For cleaning data
+library(dplyr)       # For data manipulation
+library(knitr)       # For knitting the document
+library(testthat)    # For testing code
+
 
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
