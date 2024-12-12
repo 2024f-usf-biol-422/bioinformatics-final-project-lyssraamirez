@@ -104,7 +104,6 @@ ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10,
 ```
 **Figure 1**:Figure: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. This figure highlights which genes exhibit the highest mutation frequency, with the S gene having the largest number of SNPs, suggesting greater genetic variability in this region. Such information is crucial for understanding the genetic diversity and evolution of the virus in wastewater samples
 
-
 ```{r figure-1,normalized-sequence-coverage, echo=TRUE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
 vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date,
