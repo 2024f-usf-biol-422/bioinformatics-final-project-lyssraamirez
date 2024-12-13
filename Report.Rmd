@@ -1,5 +1,5 @@
 ---
-title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples: SNP Distribution, Temporal Trends, and Correlation with Population'
+title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples'
 author: "Alyssa Ramirez"
 email: "amramirez18@dons.usfca.edu"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
