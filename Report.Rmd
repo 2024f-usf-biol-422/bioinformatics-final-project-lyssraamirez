@@ -195,9 +195,14 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     axis.title = element_text(size = 12)
   )
+ggsave(
+  filename = "population_vs_rna_detection.png",
+  plot = scatter_plot,
+  width = 10,
+  height = 8,
+  dpi = 300
+)
 
-# Display the plot in RStudio
-print(scatter_plot)
 ```
 
 **Figure 3**:Scatter plot showing the relationship between population size and RNA detection levels (measured as bases) in wastewater samples. Each point represents a data sample, and the distribution illustrates whether population size affects RNA detection variability.
@@ -258,6 +263,13 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
   ) +
   theme_minimal() + theme(axis.text.x = element_text(angle = 45,
                                                      hjust = 1, size = 10)
+)
+ggsave(
+  filename = "genome_bar_plot.png",
+  plot = last_plot(),
+  width = 10,
+  height = 8,
+  dpi = 300                        
 )
 ```
 
