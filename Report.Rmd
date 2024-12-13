@@ -257,16 +257,25 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
 
 #Tables
 ```{r save-summary-table, echo=FALSE, warning=FALSE, message=FALSE}
-# Summarize sequencing coverage by sampling method
+#Create summary table
 summary_table <- vcf_with_metadata %>%
   group_by(ww_sample_matrix, ww_sample_type) %>%
   summarize(
     Mean_Coverage = mean(Bases, na.rm = TRUE),
     Median_Coverage = median(Bases, na.rm = TRUE),
-    Min_Coverage = min(Bases, na.rm = TRUE),
-    Max_Coverage = max(Bases, na.rm = TRUE),
-    Sample_Count = n(),
+    Minimum_Coverage = min(Bases, na.rm = TRUE),
+    Maximum_Coverage = max(Bases, na.rm = TRUE),
+    Number_of_Samples = n(),
     .groups = "drop"
+  ) %>%
+  rename(
+    `Sample Matrix` = ww_sample_matrix,
+    `Sample Type` = ww_sample_type,
+    `Mean Coverage (Bases)` = Mean_Coverage,
+    `Median Coverage (Bases)` = Median_Coverage,
+    `Minimum Coverage (Bases)` = Minimum_Coverage,
+    `Maximum Coverage (Bases)` = Maximum_Coverage,
+    `Number of Samples` = Number_of_Samples
   )
 
 # Render the table using kable
@@ -275,7 +284,8 @@ knitr::kable(
   caption = "Summary of Sequencing Coverage by Sampling Method"
 )
 ```
-**Table 1**: 
+
+**Table 1**:Summary of Sequencing Coverage Metrics by Sampling Method.This table presents key statistics such as mean, median, minimum, and maximum coverage—stratified by sample type (composite vs. grab) and sample matrix (e.g., raw wastewater, post-grit removal).
 
 # Sources Cited
 ```{r sources-cite, echo=FALSE}
