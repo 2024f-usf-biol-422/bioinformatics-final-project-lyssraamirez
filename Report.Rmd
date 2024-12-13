@@ -3,7 +3,7 @@ title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples: SNP Distributio
 author: "Alyssa Ramirez"
 email: "amramirez18@dons.usfca.edu"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: pdf_document
 csl: bioinformatics.csl
 bibliography: references.bib
 params:
@@ -38,13 +38,18 @@ The sequencing metadata were obtained from the National Library of Medicine BioP
 
 #### Data Processing and Analysis
 Sequencing data were processed using a bioinformatics makefile pipeline, designed to analyze the genomic metadata. GFF annotation files and VCF datasets were utilized to identify SNPs and functional data. The pipeline consisted of the following key steps:
+
 1.GFF Annotation Parsing: The genomic feature file (GFF) was read and parsed to extract gene annotations, enabling identification of specific SARS-CoV-2 genomic regions.[2023Djaffardjy]
+
 2.Gene Extraction: Relevant genomic features were filtered to produce a table of gene names and coordinates for downstream analyses.[2023Djaffardjy]
+
 3.VCF File Integration: Variant call format (VCF) files were parsed, cleaned, and merged with metadata to create a unified dataset containing SNP-level information for all samples.[2023Djaffardjy]
+
 4.SNP Annotation: SNPs were annotated with gene information by merging the tidy VCF data with the gene table and metadata.[2023Djaffardjy]
+The pipeline worked effortlessly due to the `Bash` [@GNUbash] and `Rstudio`[@RStudio2023] function scripts previously provided by Professor Zimmerman, University of San Francisco.
 
 #### Data Visualization and Statistical Analysis
-Visualizations and analyses were conducted using R programming. R packages that were used are data manipulation are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr] and `tidyverse` [@Rtidyverse]. `Rmarkdown` was used for report generation and rendering Markdown files into HTML and pdf. [@Rrmarkdown] The R package `ggthemes`[@2022ggthemes] was used to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels. To create color on the figures `RColorBrewer`[@RColorBrewer] was used hand in hand with `ggthemes`. The R package `magrittr` [@magrittrwas] used to utilize the pipe operator in code. To manipulate and visualize variant call format (VCF) files, `vcfR`[@vcfR] was used. To enable report generation and integration of R code `knitr` was used.[@knitr] To make sure all of the pipeline worked correctly `testthat` was used.[@testthat]
+Visualizations and analyses were conducted using R programming. R packages that were used are data manipulation are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr] and `tidyverse` [@Rtidyverse]. `Rmarkdown` was used for report generation and rendering Markdown files into HTML and pdf. [@Rrmarkdown] The R package `ggthemes`[@2022ggthemes] was used to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels. To create color on the figures `RColorBrewer`[@RColorBrewer] was used hand in hand with `ggthemes`. The R package `magrittr` [@magrittr] was used to utilize the pipe operator in code. To manipulate and visualize variant call format (VCF) files, `vcfR`[@vcfR] was used. To enable report generation and integration of R code `knitr` was used.[@knitr] To make sure all of the pipeline worked correctly `testthat` was used.[@testthat]
 Lastly, figures and tables were generated to summarize and visualize the data. OpenAI's ChatGPT  [@OpenAI2024ChatGPT] was used to create all figures and table.
 
 # Results 
@@ -65,12 +70,6 @@ Genomic variability is seen in Figure 1, this figure represents each gene seen i
 
 #### Variant Distributions in Pennsylvania
 The distribution of reference and alternate genome variants in Figure 6 show a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
-
-
-
-
-
-
 
 # Discussionn
 In conclusion, data suggest that sampling methods, population size and temporal trends significantly influence the detection of SARS-CoV-2 in wastewater. When it came down to which sampling method was deemed reliable and most effective, composite samples won over grab samples. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome.
@@ -114,7 +113,7 @@ vcf_with_metadata <-
 ```
 
 # Figures
-```{r barplot-SNP-gene-distribution, echo=TRUE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
+```{r barplot-SNP-gene-distribution, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
 # Group by gene and summarize SNP counts
 gene_snp_summary <- vcf_with_metadata %>%
   group_by(gene) %>% # Update this if your gene column has a different name
@@ -146,7 +145,7 @@ ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10,
 ```
 **Figure 1**:Figure: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. This figure highlights which genes exhibit the highest mutation frequency, with the S gene having the largest number of SNPs, suggesting greater genetic variability in this region. Such information is crucial for understanding the genetic diversity and evolution of the virus in wastewater samples
 
-```{r figure-1,normalized-sequence-coverage, echo=TRUE, warning=FALSE, message=FALSE}
+```{r figure-1,normalized-sequence-coverage, echo=FALSE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
 vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date,
                                              format = "%m/%d/%y")
@@ -177,7 +176,7 @@ ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
 **Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
 The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania. Peaks in sequencing coverage may reflect variations in viral prevalence, sampling methods, or population size adjustments. The data are normalized to account for differences in population size represented by each sample.
 
-```{r population-vs-rna-detection, echo=TRUE, warning=FALSE, message=FALSE}
+```{r population-vs-rna-detection, echo=FALSE, warning=FALSE, message=FALSE}
 # Load the data using params
 data <- read.csv(params$sra_runtable_path)
 
@@ -204,10 +203,8 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
   )
 # Display the plot in RStudio
 print(scatter_plot)
-# Save the plot to a file
-ggsave(filename = "population_vs_rna_detection.png", plot = scatter_plot,
-       width = 10, height = 8, dpi = 300)
 ```
+
 **Figure 3**:Scatter plot showing the relationship between population size and RNA detection levels (measured as bases) in wastewater samples. Each point represents a data sample, and the distribution illustrates whether population size affects RNA detection variability.
 
 ```{r Population-size-AVGspotlens, echo=FALSE}
@@ -216,7 +213,7 @@ avg_spotlen_plot <- ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
   geom_point(color = "blue") +
   geom_smooth(method = "lm", color = "red") +
   labs(
-       title = "Relationship Between Population Size and AvgSpotLen",
+       title = "Relationship Between Population Size and Average Spot Length",
        x = "Population Size",
        y = "Average Spot Length (AvgSpotLen)") +
   theme_minimal()
@@ -227,7 +224,7 @@ ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
        width = 10, height = 8, dpi = 300)
 ```
 
-**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
+**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly.
 
 ```{r boxplot-composite-grab-table, echo=FALSE}
 # Load the dataset using the sra_runtable_path parameter
@@ -276,7 +273,7 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
 
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
 
-#Tables
+# Tables
 ```{r save-summary-table, echo=FALSE, warning=FALSE, message=FALSE}
 #Create summary table
 summary_table <- vcf_with_metadata %>%
