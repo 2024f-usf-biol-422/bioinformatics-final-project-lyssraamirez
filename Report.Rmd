@@ -269,7 +269,7 @@ ggsave(
   plot = last_plot(),
   width = 10,
   height = 8,
-  dpi = 300                        
+  dpi = 300
 )
 ```
 
