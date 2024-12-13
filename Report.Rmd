@@ -280,5 +280,4 @@ knitr::kable(
 
 # Sources Cited
 ```{r sources-cite, echo=FALSE}
-
 ```
