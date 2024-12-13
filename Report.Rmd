@@ -49,26 +49,29 @@ Lastly, figures and tables were generated to summarize and visualize the data. O
 
 # Results 
 #### Impact of Sampling Methods on Viral RNA Detection
-The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy.Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in Figure.5, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal flunctuations of viral RNA levels in wastewater.[@2022Kmush]
-
-#### Temporal Trends in Sequencing Coverage
-Temporal fluctuations in sequencing coverage were observed across the study period (Figure 2). Peaks in sequencing coverage corresponded to periods of increased viral prevalence in the Pennsylvania region, suggesting alignment with SARS-CoV-2 case surges. This highlights the utility of wastewater surveillance in tracking real-time epidemiological trends. However, certain months exhibited reduced coverage, potentially reflecting reduced viral shedding or challenges in sample processing.
-
-#### Population Size and RNA Detection Levels
-A positive correlation between population size and RNA detection levels was observed (Figure 3), suggesting that larger populations contribute to more consistent viral RNA signals in wastewater. However, this correlation is nuanced, as population size may also dilute viral RNA concentration due to increased wastewater volume, a factor that requires further investigation. Interestingly, Figure 4 showed a slight negative correlation between population size and average sequencing read length, suggesting that higher population complexity could influence RNA fragmentation during processing.
-
-#### Genomic Variability Across SARS-CoV-2 Genes
-SNP analysis revealed significant variability across SARS-CoV-2 genes, with the S gene exhibiting the highest SNP count (Figure 1). This finding is consistent with the critical role of the spike protein in viral infectivity and host interaction, making it a hotspot for mutations. This observation aligns with global studies on SARS-CoV-2 evolution, emphasizing the need for continued surveillance of the S gene to monitor emerging variants.
-
-#### Variant Distributions in Pennsylvania
-The distribution of reference and alternate genome variants (Figure 6) showed a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
+The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy. Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in Figure 5, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal fluctuations of viral RNA levels in wastewater.[@2022Kmush]
 
 #### Summary of Sequencing Coverage by Sampling Method
-Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance.
+Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support figure 5, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While Figure 5 visible demonstrates the distribution coverage, Table 1 highlights quantitative differences.
+
+#### Temporal Trends in Sequencing Coverage
+Temporal fluctuations in sequencing coverage were observed across Pennsylvania, as shown in Figure 2 peaks in the figure show sequencing coverage corresponding to periods of increases viral prevalence in the Pennsylvania region. This suggests that the alignment with SARS-CoV-2 case surges are representative. This also highlights the utilities of wastewater surveillance in real-time epidemiological trends. Even though, some moths exhibited a lower coverage, which could potentially explain reduced viral shedding or sample processing errors.
+
+#### Population Size and RNA Detection Levels
+The relationship between population size and overall RNA detection levels is represented in Figure 3. A positive correlation between the two variables can suggest that larger population sizes contribute to more consistent viral RNA in wastewater. However, the relationship is complex and influenced by multiple factors. As stated, "Although the association between population size and viral RNA concentrations may be driven by absolute number of COVID-19 cases, it is important to state that RNA concentrations may also be affected independently. As population size increases, sewage flow increases due to increased water usage causing dilution of viral RNA." [@Carrat2022] This further supports what is seen in Figure.4, where there is a small negative correlation between population size and average sequencing read lengths. These figures can support the idea that RNA fragmentation leads to an increase in sample diversity. Which can be insufficdent in producing accurate and reliable data while in a larger population size.
+
+#### Genomic Variability Across SARS-CoV-2 Genes
+Genomic variability is seen in Figure 1, this figure represents each gene seen in the data associated with its SNP count. The figure has revealed that there is variability across the SARS-CoV-2 genes but the S gene prevailed over all other genes. This finding is consistent with the critical role of the spike protein in viral infectivity and host interaction, making it a hotspot for mutations. This observation aligns with global studies on SARS-CoV-2 evolution, emphasizing the need for continued surveillance of the S gene to monitor emerging variants.[@PMC9023356]
+
+#### Variant Distributions in Pennsylvania
+The distribution of reference and alternate genome variants in Figure 6 show a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
 
 
 
-composit sampling-This method reduces temporal variability and gives a more representative dataset of viral RNA levels over time[@2022augustosampling]
+
+
+
+
 # Discussionn
 In conclusion, data suggest that sampling methods, population size and temporal trends significantly influence the detection of SARS-CoV-2 in wastewater. When it came down to which sampling method was deemed reliable and most effective, composite samples won over grab samples. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome.
 
