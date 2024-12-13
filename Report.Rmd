@@ -38,13 +38,9 @@ The sequencing metadata were obtained from the National Library of Medicine BioP
 
 #### Data Processing and Analysis
 Sequencing data were processed using a bioinformatics makefile pipeline, designed to analyze the genomic metadata. GFF annotation files and VCF datasets were utilized to identify SNPs and functional data. The pipeline consisted of the following key steps:
-
 1.GFF Annotation Parsing: The genomic feature file (GFF) was read and parsed to extract gene annotations, enabling identification of specific SARS-CoV-2 genomic regions.[2023Djaffardjy]
-
 2.Gene Extraction: Relevant genomic features were filtered to produce a table of gene names and coordinates for downstream analyses.[2023Djaffardjy]
-
 3.VCF File Integration: Variant call format (VCF) files were parsed, cleaned, and merged with metadata to create a unified dataset containing SNP-level information for all samples.[2023Djaffardjy]
-
 4.SNP Annotation: SNPs were annotated with gene information by merging the tidy VCF data with the gene table and metadata.[2023Djaffardjy]
 The pipeline worked effortlessly due to the `Bash` and `Rstudio` function scripts previously provided by Professor Zimmerman, University of San Francisco.
 
@@ -54,10 +50,10 @@ Lastly, figures and tables were generated to summarize and visualize the data. O
 
 # Results 
 #### Impact of Sampling Methods on Viral RNA Detection
-The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy. Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in Figure 5, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal fluctuations of viral RNA levels in wastewater.[@2022Kmush]
+The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy. Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in *Figure 5*, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal fluctuations of viral RNA levels in wastewater.[@2022Kmush]
 
 #### Summary of Sequencing Coverage by Sampling Method
-Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support figure 5, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While Figure 5 visible demonstrates the distribution coverage, Table 1 highlights quantitative differences.
+Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support *figure 5*, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While *Figure 5* visible demonstrates the distribution coverage, Table 1 highlights quantitative differences.
 
 #### Temporal Trends in Sequencing Coverage
 Temporal fluctuations in sequencing coverage were observed across Pennsylvania, as shown in Figure 2 peaks in the figure show sequencing coverage corresponding to periods of increases viral prevalence in the Pennsylvania region. This suggests that the alignment with SARS-CoV-2 case surges are representative. This also highlights the utilities of wastewater surveillance in real-time epidemiological trends. Even though, some moths exhibited a lower coverage, which could potentially explain reduced viral shedding or sample processing errors.
