@@ -20,15 +20,10 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 # Background and Overview
-The monitoring and detection of SARS-CoV-2 RNA in waste water has emerged as another tool in aiding the surveillance of SARS-CoV-2 in populations. Waste water surveillance provides non-invasive, cost-effective methods for  insights and trends in the spread in SARS-CoV-2 in a certain region. This approach has been useful in understanding hot spots, strain development, drift in other regions and overall helpful insights to the public health. Waste water surveillance has been proven to be efficent in identifying patterns of viral transmission, monitoring genetic drift, and supporting epidemiological studies.[@2022Peccia]
-This study utilizes Pennsylvania waste water surveillance systems (PAWSS) data, a statewide surveillance system that collects waste samples in diverse communities. Data from this study were collected from multiple collection sites: waste water treatment facilities (WWTFs), individual, buildings or congregate settings, correctional facilities, dormitories, long-term care facilities and schools.[@2024PAWSS] The data focuses on population sizes, sequencing information, temporal trends and waste water sample collecting methods. 
-
-Multiple factors influence the effectiveness and reliability of SARS-CoV-2 detection in wastewater samples. Specific sampling methods and collection times are crucial, as they can affect the concentration and virality of RNA. For example, composite samples may yield more data compared to grab samples, while collection during its peak viral periods may capture higher RNA levels. On the other hand, size of the population served by a wastewater treatment surveillance system can play a significant role in determining viral RNA detection. Larger populations may induce dilute viral signs due to wastewater volume, whereas smaller populations may achieve statistically significant viral RNA trends.
-
-The primary goal of this study is to evaluate how collection periods, sampling methods, genome evolution and population size impact SARS-CoV-2 RNA detection in wastewater. By using sequencing metadata on population size and time collecting samples, this analysis seeks to uncover trends and identify viral RNA strains in the reliability of the PAWSS. By normalizing sequence coverage and assessing temporal patterns, this study aims to contribute to the public health.
-
-
-
+The monitoring and detection of SARS-CoV-2 RNA in wastewater has emerged as another tool in aiding the surveillance of SARS-CoV-2 in populations. Wastewater surveillance provides non-invasive, cost-effective methods for insights and trends in the spread in SARS-CoV-2 RNA within a region. This approach has been useful in understanding hot spots, strain development, drift in other regions and overall helpful insights to the public health. Wastewater surveillance has been proven to be efficient in identifying patterns of viral transmission, monitoring genetic drift, and supporting epidemiological studies.[@2022Peccia]
+This study utilizes Pennsylvania wastewater surveillance systems (PAWSS) data, a statewide surveillance system that collects waste samples in diverse communities. Data from this study were collected from multiple collection sites: wastewater treatment facilities (WWTFs), individual, buildings or congregate settings, correctional facilities, dormitories, long-term care facilities and schools.[@2024PAWSS] The data focuses on population sizes, sequencing information, temporal trends and waste water sample collecting methods. 
+Wastewater surveillance is specifically effective for identifying SARS-CoV-2 viral RNA, including non-traditional cases that could potentially go unnoticed by  clinical testing. Wastewater surveillance offers a specific advantage over traditional clinical testing by using large-scale monitoring of SARS-CoV-2 RNA with minimal resources. As stated, this approach “only needs to test one sample for mass screening of SARS-CoV-2. Clinical testing, on the other hand, may require 10,000 individual tests and bears the associated costs for sample collection and investments in high-throughput infrastructure” [@2022Peccia] This highlights the cost-effectiveness and efficency of wastewater surveillance as a whole.
+This study focuses on the essential factors that influence the reliability and effectiveness of wastewater surveillance, including sampling methods, population size, and temporal trends. Sampling methods, such as composite and grab sampling. These methods differ in their ability to provide viral RNA signals. Inspecting population size impacts the concentration of viral rna and the potential risk of diluting detectable viral RNA in larger populations. On the other hand, temporal trends reveal how SARS-CoV-2 RNA levels can vary overtime and how population dynamics influence viral community infection rates.
 
 # Methods
 Wastewater samples were collected from various locations across Pennsylvania from the Pennsylvania Wastewater Surveillance System (PAWSS). Samples were gathered at different times using both composite and grab sampling methods. Composite samples were collected over a duration of 24 hours and is more of an average of the samples. As the grab samples were a one time or single time collection. Viral RNA was extracted from the wastewater samples using surveillance protocols, which are first filtration, then concentration, and lastly RNA purification processes. After the RNA was purified, reverse-transcribed to cDNA using Reverse Transcription Polymerase Chain Reaction (RT-PCR), which converts the RNA into DNA for sequencing. The cDNA was then sequenced. Sequencing and tabular data are part of the set from PAWSS.The GFF annotations and VCF files were processed to extract SNP data and other relevant data within the metadata.
@@ -193,6 +188,7 @@ print(avg_spotlen_plot)
 ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
        width = 10, height = 8, dpi = 300)
 ```
+
 **Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly. This information helps assess how population size could impact the quality of RNA sequencing in wastewater samples.
 
 ```{r boxplot-composite-grab-table, echo=FALSE}
@@ -218,6 +214,7 @@ ggsave(filename = "distribution_sampling_methods.png",
        plot = sampling_methods_plot, width = 10, height = 8, dpi = 300)
 
 ```
+
 **Figure 5**: Bar plot showing the distribution of sampling methods. The majority of samples were collected using composite sampling, while grab sampling was used much less frequently.
 ```{r genome-bar-graph, echo=FALSE}
 # Filter dataset
@@ -238,6 +235,7 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
                                                      hjust = 1, size = 10)
 )
 ```
+
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
 
 #Tables
