@@ -46,7 +46,7 @@ Sequencing data were processed using a bioinformatics makefile pipeline, designe
 3.VCF File Integration: Variant call format (VCF) files were parsed, cleaned, and merged with metadata to create a unified dataset containing SNP-level information for all samples.[2023Djaffardjy]
 
 4.SNP Annotation: SNPs were annotated with gene information by merging the tidy VCF data with the gene table and metadata.[2023Djaffardjy]
-The pipeline worked effortlessly due to the `Bash` [@GNUbash] and `Rstudio`[@RStudio2023] function scripts previously provided by Professor Zimmerman, University of San Francisco.
+The pipeline worked effortlessly due to the `Bash` and `Rstudio` function scripts previously provided by Professor Zimmerman, University of San Francisco.
 
 #### Data Visualization and Statistical Analysis
 Visualizations and analyses were conducted using R programming. R packages that were used are data manipulation are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr] and `tidyverse` [@Rtidyverse]. `Rmarkdown` was used for report generation and rendering Markdown files into HTML and pdf. [@Rrmarkdown] The R package `ggthemes`[@2022ggthemes] was used to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels. To create color on the figures `RColorBrewer`[@RColorBrewer] was used hand in hand with `ggthemes`. The R package `magrittr` [@magrittr] was used to utilize the pipe operator in code. To manipulate and visualize variant call format (VCF) files, `vcfR`[@vcfR] was used. To enable report generation and integration of R code `knitr` was used.[@knitr] To make sure all of the pipeline worked correctly `testthat` was used.[@testthat]
