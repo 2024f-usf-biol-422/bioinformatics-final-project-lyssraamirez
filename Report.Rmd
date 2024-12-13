@@ -44,7 +44,7 @@ Sequencing data were processed using a bioinformatics makefile pipeline, designe
 4.SNP Annotation: SNPs were annotated with gene information by merging the tidy VCF data with the gene table and metadata.[2023Djaffardjy]
 
 ### Data Visualization and Statistical Analysis
-Visualizations and analyses were conducted using R programming. R packages that were used are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr], `ggthemes`[@2022ggthemes] were employed to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels.
+Visualizations and analyses were conducted using R programming. R packages that were used are data manipulation are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr] and `tidyverse` [@Rtidyverse]. `Rmarkdown` was used for report generation and rendering Markdown files into HTML and pdf. [@Rrmarkdown] `ggthemes`[@2022ggthemes] was used to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels. `RColorBrewer`[@RColorBrewer] was used hand in hand with `ggthemes` to create colors palettes in the figures.
 
 Figures and tables were generated to effectively summarize and interpret the data. OpenAI's ChatGPT was used to assist in drafting and refining the R code for figure and table generation. All outputs produced by ChatGPT were reviewed, validated, and adjusted to ensure alignment with the study's objectives and data integrity.
 
