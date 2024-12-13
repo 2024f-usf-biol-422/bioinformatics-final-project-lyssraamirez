@@ -173,6 +173,7 @@ ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
 
 **Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
 The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania.
+
 ```{r population-vs-rna-detection, echo=FALSE, warning=FALSE, message=FALSE}
 # Load the data using params
 data <- read.csv(params$sra_runtable_path)
@@ -198,6 +199,7 @@ scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     axis.title = element_text(size = 12)
   )
+
 # Display the plot in RStudio
 print(scatter_plot)
 ```
