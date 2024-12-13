@@ -3,20 +3,46 @@
 # README for Variant Calling Pipeline for SARS-CoV-2 using Illumina short reads
 Parts of this pipeline approach are based on the pipeline described in the [Data Carpentry Genomics lessons](https://datacarpentry.org/genomics-workshop/), which are made available under a [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/).
 
-# Genomic Surveillance of SARS-CoV-2 Variants in Pennsylvania Wastewater: Insights into Epidemiological Trends
-Research question:How does the prevalence of SARS-CoV-2 in wastewater samples correlate with population size and sampling methods over time in Pennsylvania?
-
-# Source
-Accession: PRJNA1039783 ID: 1039783
-I have chosen  from "Severe acute respiratory syndrome coronavirus 2",submitted by the PA Department of Health Bureau of Laboratories Submission Group. I also plan on comparing different counties in Pensylvania: Allegheny County,Capital Region Water(Dauphin County),Erie County and Indiana Borough.(Indiana County)
-
-# Overall goals
-The goal to use R Markdown, Git/GitHub, and Linux command-line skills through careful analysis of SARS-CoV-2 sequencing data from wastewater samples and COVID-19 case data in Pensylvania. The research question will be proven by comparing and contrasting sequencing data of SARS-CoV-2 variants in wastewater samples and variant frequencies reported in particular regions with large populations. I will also be looking into how the filtration of water systems affect the cleanliness and pureness of waterwaste that is recycled for public use.
-
-# Graphs and Figures
-1.Case trends vs. wastewater sequence counts
-2.Phylogenetic tree of identified SARS-CoV-2 variants
-3.Heatmap of variant prevalence by region and population size
-4.Raw Wastewater vs Post grit pureness
-5.Boxplot comparing case numbers and genomic diversity
-6.Table summarizing significant variants and associated data to population size
+# Overall structure format
+├── README.md                    # Overview of the project
+├── Report.Rmd                   # Main RMarkdown file for the report
+├── Report_files/                # Folder for supporting files for the knitted report
+├── references.bib               # Bibliography file for citations
+├── DESCRIPTION                  # Package description and dependencies
+├── bioinformatics.csl           # Citation style file
+├── Makefile                     # Automates the entire analysis pipeline
+├── data/                        # Folder for input data files
+│   ├── raw/                     # Raw input data (e.g., FASTQ, VCFs, metadata)
+│   ├── processed/               # Processed datasets ready for analysis
+│   ├── metadata/                # Metadata files for the dataset
+├── output/                      # Folder for analysis outputs
+│   ├── distribution_sampling_methods.png   # Distribution of sampling methods
+│   ├── normalized_sequencing_coverage.png # Sequencing coverage over time
+│   ├── population_size_avg_spotlen.png    # Relationship between population size and average spot length
+│   ├── population_vs_rna_detection.png    # Relationship between population size and RNA detection
+│   ├── snp_counts_across_genes.png        # SNP counts across genes
+│   ├── summary_table_output.png           # Summary table output
+│   ├── Report.html                        # Knitted HTML version of the report
+│   ├── Sample_report.html                 # Sample HTML report
+├── code/                        # Folder for scripts
+│   ├── 00_setup_directories.sh  # Bash script to set up directories
+│   ├── 01_download_fastq.sh     # Download FASTQ files
+│   ├── 02_download_reference.sh # Download reference genome
+│   ├── 03_download_annotation.sh# Download annotation files
+│   ├── 04_fastqc.sh             # Perform quality control
+│   ├── 05_trim.sh               # Trim FASTQ reads
+│   ├── 06_bwa_index.sh          # Index reference genome with BWA
+│   ├── 07_run_bwa.sh            # Map reads to the reference genome
+│   ├── 08_sam_to_bam.sh         # Convert SAM to BAM
+│   ├── 09_sort_bam.sh           # Sort BAM files
+│   ├── 10_flagstat.sh           # Flag statistics for BAM files
+│   ├── 11_bcftools_mpileup.sh   # Generate VCF using BCFtools
+│   ├── 12_create_vcf.sh         # Create final VCF
+│   ├── 13_filter_vcf.sh         # Filter VCF
+│   ├── 14_render_rmarkdown.sh   # Render RMarkdown report
+│   └── functions/               # Folder for helper R scripts
+│       ├── add_genes_metadata_to_vcfstack.R  # Add gene metadata to VCF
+│       ├── assign_gene.R                      # Assign genes to variants
+│       ├── extract_genes_from_gff.R           # Extract genes from GFF file
+│       ├── parse_tidy_and_stack_vcfs.R        # Parse and stack VCF files
+│       └── read_gff.R                         # Read GFF annotation files
