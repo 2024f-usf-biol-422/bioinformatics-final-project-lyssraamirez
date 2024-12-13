@@ -53,19 +53,19 @@ Lastly, figures and tables were generated to summarize and visualize the data. O
 The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy. Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in *Figure 5*, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal fluctuations of viral RNA levels in wastewater.[@2022Kmush]
 
 #### Summary of Sequencing Coverage by Sampling Method
-Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support *figure 5*, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While *Figure 5* visible demonstrates the distribution coverage, Table 1 highlights quantitative differences.
+Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support *figure 5*, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While *Figure 5* visible demonstrates the distribution coverage, *Table 1* highlights quantitative differences.
 
 #### Temporal Trends in Sequencing Coverage
-Temporal fluctuations in sequencing coverage were observed across Pennsylvania, as shown in Figure 2 peaks in the figure show sequencing coverage corresponding to periods of increases viral prevalence in the Pennsylvania region. This suggests that the alignment with SARS-CoV-2 case surges are representative. This also highlights the utilities of wastewater surveillance in real-time epidemiological trends. Even though, some moths exhibited a lower coverage, which could potentially explain reduced viral shedding or sample processing errors.
+Temporal fluctuations in sequencing coverage were observed across Pennsylvania, as shown in *Figure 2* peaks in the figure show sequencing coverage corresponding to periods of increases viral prevalence in the Pennsylvania region. This suggests that the alignment with SARS-CoV-2 case surges are representative. This also highlights the utilities of wastewater surveillance in real-time epidemiological trends. Even though, some moths exhibited a lower coverage, which could potentially explain reduced viral shedding or sample processing errors.
 
 #### Population Size and RNA Detection Levels
-The relationship between population size and overall RNA detection levels is represented in Figure 3. A positive correlation between the two variables can suggest that larger population sizes contribute to more consistent viral RNA in wastewater. However, the relationship is complex and influenced by multiple factors. As stated, "Although the association between population size and viral RNA concentrations may be driven by absolute number of COVID-19 cases, it is important to state that RNA concentrations may also be affected independently. As population size increases, sewage flow increases due to increased water usage causing dilution of viral RNA." [@Carrat2022] This further supports what is seen in Figure.4, where there is a small negative correlation between population size and average sequencing read lengths. These figures can support the idea that RNA fragmentation leads to an increase in sample diversity. Which can be insufficdent in producing accurate and reliable data while in a larger population size.
+The relationship between population size and overall RNA detection levels is represented in *Figure 3*. A positive correlation between the two variables can suggest that larger population sizes contribute to more consistent viral RNA in wastewater. However, the relationship is complex and influenced by multiple factors. As stated, "Although the association between population size and viral RNA concentrations may be driven by absolute number of COVID-19 cases, it is important to state that RNA concentrations may also be affected independently. As population size increases, sewage flow increases due to increased water usage causing dilution of viral RNA." [@Carrat2022] This further supports what is seen in *Figure.4*, where there is a small negative correlation between population size and average sequencing read lengths. These figures can support the idea that RNA fragmentation leads to an increase in sample diversity. Which can be insufficdent in producing accurate and reliable data while in a larger population size.
 
 #### Genomic Variability Across SARS-CoV-2 Genes
-Genomic variability is seen in Figure 1, this figure represents each gene seen in the data associated with its SNP count. The figure has revealed that there is variability across the SARS-CoV-2 genes but the S gene prevailed over all other genes. This finding is consistent with the critical role of the spike protein in viral infectivity and host interaction, making it a hotspot for mutations. This observation aligns with global studies on SARS-CoV-2 evolution, emphasizing the need for continued surveillance of the S gene to monitor emerging variants.[@PMC9023356]
+Genomic variability is seen in *Figure 1*, this figure represents each gene seen in the data associated with its SNP count. The figure has revealed that there is variability across the SARS-CoV-2 genes but the S gene prevailed over all other genes. This finding is consistent with the critical role of the spike protein in viral infectivity and host interaction, making it a hotspot for mutations. This observation aligns with global studies on SARS-CoV-2 evolution, emphasizing the need for continued surveillance of the S gene to monitor emerging variants.[@PMC9023356]
 
 #### Variant Distributions in Pennsylvania
-The distribution of reference and alternate genome variants in Figure 6 show a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
+The distribution of reference and alternate genome variants in *Figure 6* show a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
 
 # Discussionn
 In conclusion, data suggest that sampling methods, population size and temporal trends significantly influence the detection of SARS-CoV-2 in wastewater. When it came down to which sampling method was deemed reliable and most effective, composite samples won over grab samples. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome.
@@ -139,7 +139,7 @@ print(snp_plot)
 ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10,
        height = 8, dpi = 300)
 ```
-**Figure 1**:Figure: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. This figure highlights which genes exhibit the highest mutation frequency, with the S gene having the largest number of SNPs, suggesting greater genetic variability in this region. Such information is crucial for understanding the genetic diversity and evolution of the virus in wastewater samples
+**Figure 1**: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. 
 
 ```{r figure-1,normalized-sequence-coverage, echo=FALSE, warning=FALSE, message=FALSE}
 # Convert Collection_Date to Date format
@@ -170,8 +170,7 @@ ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
 ```
 
 **Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
-The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania. Peaks in sequencing coverage may reflect variations in viral prevalence, sampling methods, or population size adjustments. The data are normalized to account for differences in population size represented by each sample.
-
+The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania.
 ```{r population-vs-rna-detection, echo=FALSE, warning=FALSE, message=FALSE}
 # Load the data using params
 data <- read.csv(params$sra_runtable_path)
@@ -220,8 +219,7 @@ ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
        width = 10, height = 8, dpi = 300)
 ```
 
-**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. The figure suggests a slight negative correlation, implying that as population size increases, the average spot length may decrease slightly.
-
+**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. 
 ```{r boxplot-composite-grab-table, echo=FALSE}
 # Load the dataset using the sra_runtable_path parameter
 sra_runtable_path <- "data/00_sra_runtable/SraRunTable.csv"
@@ -268,7 +266,6 @@ ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
 ```
 
 **Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
-
 # Tables
 ```{r save-summary-table, echo=FALSE, warning=FALSE, message=FALSE}
 #Create summary table
