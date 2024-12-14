@@ -1,6 +1,7 @@
 ---
-title: 'Your Title Here'
-author: "Don Francisco"
+title: 'Analyzing SARS-CoV-2 in Pennsylvania Wastewater Samples'
+author: "Alyssa Ramirez"
+email: "amramirez18@dons.usfca.edu"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 csl: bioinformatics.csl
@@ -8,7 +9,7 @@ bibliography: references.bib
 params:
   gff_file_path: "data/metadata/sars_refgenome_annotation.gff"
   vcf_dir_path: "data/11_vcf_output_for_R"
-  sra_runtable_path: "data/00_sra_runtable/SraRunTable_PRJNA656695_short_example.txt"
+  sra_runtable_path: "data/00_sra_runtable/SraRunTable.csv"
 ---
 
 ```{r setup, include = FALSE}
@@ -19,30 +20,67 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 # Background and Overview
+The monitoring and detection of SARS-CoV-2 RNA in wastewater has emerged as another tool in aiding the surveillance of SARS-CoV-2 in populations. Wastewater surveillance provides non-invasive, cost-effective methods for insights and trends in the spread in SARS-CoV-2 RNA within a region. This approach has been useful in understanding hot spots, strain development and genetic drift in other regions. Wastewater surveillance has been proven to be efficient in identifying patterns of viral transmission, monitoring genetic drift, and supporting epidemiological studies.[@2022Peccia]
+This study utilizes Pennsylvania wastewater surveillance systems (PAWSS) data, a statewide surveillance system that collects waste samples in diverse communities. Data from this study were collected from multiple collection sites: wastewater treatment facilities (WWTFs), individual buildings or congregate settings, correctional facilities, dormitories, long-term care facilities and schools.[@2024PAWSS] The data focuses on population sizes, sequencing information, temporal trends and waste water sample collecting methods. 
+Wastewater surveillance is specifically effective for identifying SARS-CoV-2 viral RNA, including non-traditional cases that could potentially go unnoticed by clinical testing. These also includes,  asymptomatic and oligosymptomatic samples. Wastewater surveillance offers a unique advantage over traditional clinical testing by using large-scale monitoring of SARS-CoV-2 RNA with minimal resources. As stated, this approach “only needs to test one sample for mass screening of SARS-CoV-2. Clinical testing, on the other hand, may require 10,000 individual tests and bears the associated costs for sample collection and investments in high-throughput infrastructure” [@2022Peccia] This highlights the cost-effectiveness and efficiency of wastewater surveillance as a whole.
+This study focuses on the essential factors that influence the reliability and effectiveness of wastewater surveillance, including sampling methods, population size, and temporal trends. Sampling methods, such as composite and grab sampling. These methods differ in their ability to provide viral RNA signals. Inspecting population size impacts the concentration of viral RNA and the potential risk of diluting detectable RNA in larger populations. On the other hand, temporal trends reveal how SARS-CoV-2 RNA levels can vary overtime and how population dynamics influence viral community infection rates. Bash and Rstudio technologies were used to create visual representations of data.
 
-This is a report on SARS-CoV-2, including some variant analysis [@koyama2020variant].
+# Research Question
+The primary aim of this study is to investigate how sampling methods (composite vs. grab), collection periods, and population size influence the detection and reliability of SARS-CoV-2 RNA in wastewater. By analyzing sequencing metadata, this research seeks to uncover factors that impact viral RNA detection, with implications for improving public health surveillance systems.
 
 # Methods
+#### Wastewater data collection
+Wastewater samples were collected from various locations across Pennsylvania from the Pennsylvania Wastewater Surveillance System (PAWSS). Samples were gathered used 2 types of filtering mechanisms, composite and grab sampling methods. Composite samples were collected over a duration of 24 hours and considered a "average" of waste. Compared to grab sampling, which is a one-time sample.[@2022Kmush] 
 
-See the set of tutorials on the [vcfR package website](https://knausb.github.io/vcfR_documentation/index.html).
+#### RNA Purification and Sequencing
+Following extraction from composite and grab samplings, reverse transcription to synthesize complementary DNA (cDNA) is used on the purified RNA. The purified RNA is synthesized using Reverse Transcription Polymerase Chain Reaction (RT-PCR). The cDNA is amplified and prepared for sequencing using the Illumina COVIDSeq™ Assay, which targets the SARS-CoV-2 genome, including regions prone to single nucleotide polymorphisms (SNPs). "Sequencing was performed on an Illumina platform, generating high-throughput data with robust coverage of genomic regions of interest."[@2024illumina] To eliminate contaminants and ensure accurate data, quality control metrics were applied to sequencing reads. The sequencing metadata were obtained from the National Library of Medicine BioProject database (Accession: PRJNA1039783), submitted by the Pennsylvania Department of Health Bureau of Laboratories.[@2024BioProject]
 
-You may also want to use any of a range of different COVID data packages and data sources:
+#### Data Processing and Analysis
+Sequencing data were processed using a bioinformatics makefile pipeline, designed to analyze the genomic metadata. GFF annotation files and VCF datasets were utilized to identify SNPs and functional data. The pipeline consisted of the following key steps:
+1.GFF Annotation Parsing: The genomic feature file (GFF) was read and parsed to extract gene annotations, enabling identification of specific SARS-CoV-2 genomic regions.[2023Djaffardjy]
+2.Gene Extraction: Relevant genomic features were filtered to produce a table of gene names and coordinates for downstream analyses.[2023Djaffardjy]
+3.VCF File Integration: Variant call format (VCF) files were parsed, cleaned, and merged with metadata to create a unified dataset containing SNP-level information for all samples.[2023Djaffardjy]
+4.SNP Annotation: SNPs were annotated with gene information by merging the tidy VCF data with the gene table and metadata.[2023Djaffardjy]
+The pipeline worked effortlessly due to the `Bash` and `Rstudio` function scripts previously provided by Professor Zimmerman, University of San Francisco.
 
-* https://kjhealy.github.io/covdata/
-* https://github.com/como-ph/oxcovid19
-* https://ropensci.org/blog/2020/10/20/searching-medrxivr-and-biorxiv-preprint-data/
-* https://covidtracking.com/data/api
-  * `readr::read_csv("https://api.covidtracking.com/v1/states/daily.csv")`
+#### Data Visualization and Statistical Analysis
+Visualizations and analyses were conducted using R programming. R packages that were used for data manipulation are `ggplot2` [@2016ggplot2], `dplyr` [@2023dplyr] and `tidyverse` [@Rtidyverse]. `Rmarkdown` was used for report generation and rendering Markdown files into HTML and pdf. [@Rrmarkdown] The R package `ggthemes`[@2022ggthemes] was used to create figures illustrating SNP distribution, temporal trends, and relationships between key variables, such as population size and RNA detection levels. To create color on the figures `RColorBrewer`[@RColorBrewer] was used hand in hand with `ggthemes`. The R package `magrittr` [@magrittr] was used to utilize the pipe operator in code. To manipulate and visualize variant call format (VCF) files, `vcfR`[@vcfR] was used. To enable report generation and integration of R code `knitr` was used.[@knitr] To make sure all of the pipeline worked correctly `testthat` was used.[@testthat] Lastly, figures and tables were generated to summarize and visualize the data. OpenAI's ChatGPT  [@OpenAI2024ChatGPT] was used to create all figures and table.
 
-## Subsections are ok too
+# Results 
+#### Impact of Sampling Methods on Viral RNA Detection
+The analysis of composite and grab samples showed the distinct differences in RNA detection consistency and data accuracy. Composite samples, which were collected over the course of 24 hours, provided a higher average in sequencing coverage compared to the grab samples.[@2022Kmush] As showed in *Figure 5*, the distribution of sampling methods showed a drastic difference in count. Composite sampling minimizes temporal variability which results in a overall higher value in representative number of SARS-CoV-2 RNA levels. On the other hand, grab samples collect more at a single time but show a major deduction in sequencing coverage and high variability. Which is likely due to the temporal fluctuations of viral RNA levels in wastewater.[@2022Kmush]
 
-# Results and Discussion
+#### Summary of Sequencing Coverage by Sampling Method
+Table 1 summarizes the sequencing coverage for different sampling matrices and methods. Composite samples consistently outperformed grab samples in sequencing coverage, reinforcing their reliability for wastewater surveillance. This table is used to support *figure 5*, the table provides a detailed statistical metric on sequencing coverage for composite and grab sampling methods. While *Figure 5* visible demonstrates the distribution coverage, *Table 1* highlights quantitative differences.
+
+#### Temporal Trends in Sequencing Coverage
+Temporal fluctuations in sequencing coverage were observed across Pennsylvania, as shown in *Figure 2*, peaks in the figure show sequencing coverage corresponding to periods of increases viral prevalence in the Pennsylvania region. This suggests that the alignment with SARS-CoV-2 case surges are representative. This also highlights the utilities of wastewater surveillance in real-time epidemiological trends. Even though, some months exhibited a lower coverage, which could potentially explain reduced viral shedding or sample processing errors.
+
+#### Population Size and RNA Detection Levels
+The relationship between population size and overall RNA detection levels is represented in *Figure 3*. A positive correlation between the two variables can suggest that larger population sizes contribute to more consistent viral RNA in wastewater. However, the relationship is complex and influenced by multiple factors. As stated, "Although the association between population size and viral RNA concentrations may be driven by absolute number of COVID-19 cases, it is important to state that RNA concentrations may also be affected independently. As population size increases, sewage flow increases due to increased water usage causing dilution of viral RNA." [@Carrat2022] This further supports what is seen in *Figure.4*, where there is a small negative correlation between population size and average sequencing read lengths. These figures can support the idea that RNA fragmentation leads to an increase in sample diversity. Which can be insufficent in producing accurate and reliable data while in a larger population size.
+
+#### Genomic Variability Across SARS-CoV-2 Genes
+Genomic variability is seen in *Figure 1*, this figure represents each gene seen in the data associated with its SNP count. The figure has revealed that there is variability across the SARS-CoV-2 genes but the S gene prevailed over all of the other genes. This finding is consistent with the critical role of the spike protein in viral infectivity and host interaction, making it a hotspot for mutations. This observation aligns with global studies on SARS-CoV-2 evolution, emphasizing the need for continued surveillance of the S gene to monitor emerging variants.[@PMC9023356]
+
+#### Variant Distributions in Pennsylvania
+The distribution of reference and alternate genome variants in *Figure 6* show a predominance of thymine (T) as the most frequent alternate genome nucleotide. This finding may reflect regional patterns in viral evolution, further underscoring the importance of localized genomic surveillance.
+
+# Discussionn
+This study highlights the value and importance of wastewater surveillance as a cost effective and non-invasive tool to monitor SARS-CoV-2 RNA prevalence within populations. By analyzing data from the Pennsylvania Wastewater Surveillance System (PAWSS), we explored the impact of sampling methods, temporal trends and population size on the reliability of SARS-CoV-2 RNA detection. Population size and RNA detection did not correlate and had a small role against RNA detection showing trends that were not predicted before going through the data. Although the population size data was not helpful to the  overall study, it was helpful in the visualization of the S genome, seen as the most common in the population. Temporal trends indicated variation over time in sequencing coverage that could possibly reflect changes in the SARS-CoV-2 genome. Our findings proved the superiority of composite sampling over grab sampling method and proved the superiority of consistency with sequencing coverage. These results outline the need for standardized sampling methods to increase data quality for wastewater surveillance programs. Temporal trends in sequencing coverage aligned with periods of increased SARS-CoV-2 prevalence. Which demonstrates a tracking in epidemiological shifts.
 
 ```{r load-packages-and-functions}
-library("vcfR")
-library("ggplot2")
-library("dplyr")
-library("ggthemes")
+# Load all necessary libraries
+library(tidyverse)   # Includes ggplot2, dplyr, etc.
+library(rmarkdown)   # For rendering markdown files
+library(ggthemes)    # For themes in ggplot2
+library(RColorBrewer) # For color palettes
+library(magrittr)    # For pipes (%>%)
+library(vcfR)        # For handling VCF files
+library(janitor)     # For cleaning data
+library(dplyr)       # For data manipulation
+library(knitr)       # For knitting the document
+library(testthat)    # For testing code
+
 
 # this loads all function files in the code/functions directory
 function_paths <- list.files("code/functions", full.names = TRUE)
@@ -69,38 +107,206 @@ vcf_with_metadata <-
 ```
 
 # Figures
+```{r barplot-SNP-gene-distribution, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10, fig.height=8}
+# Group by gene and summarize SNP counts
+gene_snp_summary <- vcf_with_metadata %>%
+  group_by(gene) %>% # Update this if your gene column has a different name
+  summarize(total_snps = n()) %>%
+  filter(!is.na(gene))
 
-```{r sample-plot}
-# create a plot of unique SNP locations within each gene across all samples
-vcf_with_metadata %>%
-  filter(!is.na(gene)) %>% # get rid of SNPs not in gene regions
-  group_by(gene, pos) %>%
-  tally() %>% # this gives a column n for the number of gene by position
-  group_by(gene) %>%
-  tally() %>% # this collapses that down to the number of unique SNP locations
-  ggplot(aes(x = gene,
-             y = n)) +
-  geom_col() +
-  labs(title = "Count of distinct SNPs in Named SARS-CoV-2 Genes",
-       x = "Gene Name") +
-  theme_few() # get rid of the grey background
+# Create the bar plot
+snp_plot <- ggplot(gene_snp_summary, aes(x = reorder(gene, -total_snps),
+                                         y = total_snps, fill = gene)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  labs(
+    title = "SNP Counts Across Different Genes",
+    x = "Gene",
+    y = "SNP Count",
+    fill = "Gene"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none" # Hide legend for simplicity
+  )
+
+# Display the plot in RStudio
+print(snp_plot)
+
+# Save the plot to a file
+ggsave(filename = "snp_counts_across_genes.png", plot = snp_plot, width = 10,
+       height = 8, dpi = 300)
+```
+**Figure 1**: Bar plot showing the number of single nucleotide polymorphisms (SNPs) identified across different genes of SARS-CoV-2. The genes are labeled on the x-axis, and the y-axis indicates the count of SNPs. 
+
+```{r figure-1,normalized-sequence-coverage, echo=FALSE, warning=FALSE, message=FALSE}
+# Convert Collection_Date to Date format
+vcf_with_metadata$Collection_Date <- as.Date(vcf_with_metadata$Collection_Date,
+                                             format = "%m/%d/%y")
+
+# Normalize Sequencing Coverage by Population Size and create the plot
+normalized_plot <- vcf_with_metadata %>%
+  mutate(Bases_per_person = Bases / ww_population) %>%
+  ggplot(aes(x = Collection_Date,
+             y = Bases_per_person,
+             color = geo_loc_name)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Normalized Sequencing Coverage Over Time by Region",
+    x = "Collection Date",
+    y = "Sequencing Coverage per Person",
+    color = "Region"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Display the plot in RStudio
+print(normalized_plot)
+# Save the plot to a file
+ggsave(filename = "normalized_sequencing_coverage.png", plot = normalized_plot,
+       width = 10, height = 8, dpi = 300)
 ```
 
-**Figure 1**: N and S genes have more unique SNPs in the set of samples analyzed.
+**Figure 2**:Temporal Trends in Normalized Sequencing Coverage Over Time in Pennsylvania
+The plot shows normalized sequencing coverage (SARS-CoV-2 RNA levels per person) over time for wastewater samples collected in Pennsylvania.
+
+```{r population-vs-rna-detection, echo=FALSE, warning=FALSE, message=FALSE}
+# Load the data using params
+data <- read.csv(params$sra_runtable_path)
+
+# Ensure relevant columns are numeric
+data$ww_population <- as.numeric(data$ww_population)
+data$Bases <- as.numeric(data$Bases)
+
+# Remove rows with missing or invalid data
+filtered_data <- data %>%
+  filter(!is.na(ww_population), !is.na(Bases))
+
+# Create the scatter plot
+scatter_plot <- ggplot(filtered_data, aes(x = ww_population, y = Bases)) +
+  geom_point(alpha = 0.7, color = "blue") +
+  labs(
+    title = "Relationship Between Population Size and RNA Detection",
+    x = "Population Size",
+    y = "RNA Detection (Bases)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12)
+  )
+ggsave(
+  filename = "population_vs_rna_detection.png",
+  plot = scatter_plot,
+  width = 10,
+  height = 8,
+  dpi = 300
+)
+
+```
+
+**Figure 3**:Scatter plot showing the relationship between population size and RNA detection levels (measured as bases) in wastewater samples. Each point represents a data sample, and the distribution illustrates whether population size affects RNA detection variability.
+
+```{r Population-size-AVGspotlens, echo=FALSE}
+# Create the scatter plot with regression line
+avg_spotlen_plot <- ggplot(data, aes(x = ww_population, y = AvgSpotLen)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+       title = "Relationship Between Population Size and Average Spot Length",
+       x = "Population Size",
+       y = "Average Spot Length (AvgSpotLen)") +
+  theme_minimal()
+# Display the plot in RStudio
+print(avg_spotlen_plot)
+# Save the plot to a file
+ggsave(filename = "population_size_avg_spotlen.png", plot = avg_spotlen_plot,
+       width = 10, height = 8, dpi = 300)
+```
+
+**Figure 4**: Scatter plot showing the relationship between population size and average spot length of sequencing reads. Each blue point represents a sample, and the red regression line indicates the overall trend. 
+```{r boxplot-composite-grab-table, echo=FALSE}
+# Create the bar plot for distribution of sampling methods
+sampling_methods_plot <- ggplot(data, aes(x = ww_sample_type)) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    title = "Distribution of Sampling Methods",
+    x = "Sample Type",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+# Display the plot in RStudio
+print(sampling_methods_plot)
+
+# Save the plot to a file
+ggsave(filename = "distribution_sampling_methods.png",
+       plot = sampling_methods_plot, width = 10, height = 8, dpi = 300)
+
+```
+
+**Figure 5**: Bar plot showing the distribution of sampling methods. The majority of samples were collected using composite sampling, while grab sampling was used much less frequently.
+```{r genome-bar-graph, echo=FALSE}
+# Filter dataset
+common_variants <- vcf_with_metadata %>%
+  group_by(ref, alt) %>%
+  summarize(Count = n(), .groups = "drop") %>%
+  filter(Count > 500)
+# Create a bar plot to visualize the reference vs. alternate genome
+ggplot(common_variants, aes(x = ref, y = Count, fill = alt)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Distribution of Common Reference vs. Alternate Genome Variants",
+    x = "Reference Genome",
+    y = "Count of Variants",
+    fill = "Alternate Genome"
+  ) +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45,
+                                                     hjust = 1, size = 10)
+)
+ggsave(
+  filename = "genome_bar_plot.png",
+  plot = last_plot(),
+  width = 10,
+  height = 8,
+  dpi = 300
+)
+```
+
+**Figure 6**: Distribution of Common Reference vs. Alternate Genome Variants. This bar plot displays the counts of variants classified by their reference genome nucleotide and corresponding alternate genome variants. Variants are categorized as A, C, G, and T based on their alternate genome.
 
 # Tables
 
-```{r example-table}
-# An example table to show the length of each gene using its start and end
-gene_table %>%
-  mutate(length = end - start) %>%
-  select(gene_name, start, end, length) %>%
-  knitr::kable(col.names = c("Gene Name",
-                             "Start",
-                             "End",
-                             "Length"))
+**Table 1**:Summary of Sequencing Coverage Metrics by Sampling Method.This table presents key statistics such as mean, median, minimum, and maximum coverage—stratified by sample type (composite vs. grab) and sample matrix (e.g., raw wastewater, post-grit removal).
+```{r save-summary-table, echo=FALSE, warning=FALSE, message=FALSE}
+#Create summary table
+summary_table <- vcf_with_metadata %>%
+  group_by(ww_sample_matrix, ww_sample_type) %>%
+  summarize(
+    Mean_Coverage = mean(Bases, na.rm = TRUE),
+    Median_Coverage = median(Bases, na.rm = TRUE),
+    Minimum_Coverage = min(Bases, na.rm = TRUE),
+    Maximum_Coverage = max(Bases, na.rm = TRUE),
+    Number_of_Samples = n(),
+    .groups = "drop"
+  ) %>%
+  rename(
+    `Sample Matrix` = ww_sample_matrix,
+    `Sample Type` = ww_sample_type,
+    `Mean Coverage (Bases)` = Mean_Coverage,
+    `Median Coverage (Bases)` = Median_Coverage,
+    `Minimum Coverage (Bases)` = Minimum_Coverage,
+    `Maximum Coverage (Bases)` = Maximum_Coverage,
+    `Number of Samples` = Number_of_Samples
+  )
+
+# Render the table using kable
+knitr::kable(
+  summary_table,
+  caption = "Summary of Sequencing Coverage by Sampling Method"
+)
 ```
 
-**Table 1**: Gene names, locations, and lengths in the SARS-CoV-2 genome. Higher SNP counts in the S and N genes may be related to the larger size of these genes.
-
 # Sources Cited
+```{r sources-cite, echo=FALSE}
+```
